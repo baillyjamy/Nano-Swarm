@@ -1,7 +1,7 @@
 #ifndef BUFFER_HPP_
 # define BUFFER_HPP_
 
-#include <memory.h>
+#include <algorithm>
 
 template <class StorageType, unsigned int BLOCK_POWER = 0u>
 class Buffer
@@ -52,7 +52,7 @@ public:
 	data = new StorageType[capacity];
 	if (data_size)
 	  {
-	    memcpy(data, temp, (data_size) * sizeof(StorageType));
+	    std::copy(data, temp, (data_size) * sizeof(StorageType));
 	    delete [] temp;
 	  }
       }
@@ -60,7 +60,7 @@ public:
 
   void noIfAdd(StorageType const *toAdd, unsigned int const amount)
   {
-    memcpy(data + data_size, toAdd, amount * sizeof(StorageType));
+    std::copy(data + data_size, toAdd, amount * sizeof(StorageType));
     data_size = data_size + amount;
   }
 

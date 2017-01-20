@@ -16,8 +16,8 @@ static inline RenderContext contextFromFiles(std::string name)
   std::stringstream vert;
   std::stringstream frag;
 
-  vert << std::ifstream("shaders/" + name + ".vert");
-  frag << std::ifstream("shaders/" + name + ".frag");
+  vert << std::ifstream("shaders/" + name + ".vert").rdbuf();
+  frag << std::ifstream("shaders/" + name + ".frag").rdbuf();
   return {my_opengl::createVao(),
       my_opengl::createProgram<2>({GL_VERTEX_SHADER, GL_FRAGMENT_SHADER},
 	{vert.str(), frag.str()})};
@@ -137,7 +137,7 @@ void Display::debugTriangle()
   Bind<RenderContext> bind(worldRenderContext);
   // float *data = new float[logic.physics.getFixtureCount() * 4 * 4 * 3];
   // unsigned int i(0);
-  
+
   // for (unsigned int j(0); j < logic.physics.getFixtureCount(); j++)
   //   {
   //     Vect<3u, Vect<2u, float>> corners = logic.physics.getFixtureCoords(j);
