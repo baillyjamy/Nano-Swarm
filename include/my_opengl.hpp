@@ -5,7 +5,6 @@
 # include "GL/gl3w.h"
 # include <GLFW/glfw3.h>
 # include "vect.hpp"
-# include "lock.hpp"
 
 // these typedefs might be replaced by individual classes down line
 class Shader

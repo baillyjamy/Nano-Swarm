@@ -1,13 +1,3 @@
-//
-// input.cpp for input in /home/zeng_d
-//
-// Made by David Zeng
-// Login   <zeng_d@epitech.net>
-//
-// Started on  Sat Jan 21 00:10:16 2017 David Zeng
-// Last update Sat Jan 21 00:10:16 2017 David Zeng
-//
-
 #include <iostream>
 #include "input.hpp"
 
@@ -17,11 +7,16 @@ bool Callback::leftPressed = false;
 
 void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
+  (void)window;
+  (void)scancode;
+  (void)action;
+  (void)mode;
   std::cout << "key : " << key << std::endl;
 }
 
 void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 {
+  (void)window;
   Callback::x = x;
   Callback::y = y;
 
@@ -33,6 +28,8 @@ void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 
 void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
+  (void)window;
+  (void)mods;
   if (button == GLFW_MOUSE_BUTTON_LEFT)
     {
       if (action == GLFW_PRESS)
