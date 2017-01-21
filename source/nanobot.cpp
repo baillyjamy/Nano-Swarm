@@ -3,6 +3,8 @@
 #include "logic.hpp"
 #include "light.hpp"
 
+constexpr const Vect<3u, double> NanoBot::botColors[NanoBot::UNKNOWN];
+
 NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type, Light *light)
   : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light), target(pos)
 {
