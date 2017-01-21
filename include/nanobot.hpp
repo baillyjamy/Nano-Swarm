@@ -5,6 +5,7 @@
 # include "vect.hpp"
 
 class Logic;
+class Light;
 
 class NanoBot
 {
@@ -25,9 +26,10 @@ private:
   unsigned int cooldown;
 
   bool selected;
+  Light *light;
 
 public:
-  NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type);
+  NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type, Light *light);
   bool update();
   Vect<2u, double> getPos() const;
   Vect<2u, double> getSpeed() const;
@@ -38,6 +40,7 @@ public:
   void setCooldown(unsigned int);
   void tick(std::vector<NanoBot *> &nearBots);
   void action(std::vector<NanoBot *> &nearBots, Logic &);
+  Light *getLight();
 
 private:
   // returns true if the nanobot died during his action

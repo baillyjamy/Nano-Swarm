@@ -25,7 +25,6 @@ private:
   glBuffer cornerBuffer;
   RenderTexture lightRenderTexture;
   RenderTexture worldRenderTexture;
-  std::vector<Light> lights;
   FPSCounter fpsCounter;
   Logic &logic;
 
