@@ -22,16 +22,4 @@ namespace Callback
   extern Vect<2u, double> dragOrigin;
 };
 
-class KeyInput
-{
-public:
-private:
-};
-
-class MouseInput
-{
-public:
-private:
-};
-
 #endif /* !INPUT_HPP_ */

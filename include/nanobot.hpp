@@ -24,7 +24,7 @@ private:
   Type type;
   unsigned int cooldown;
 
-  bool isSelected;
+  bool selected;
 
 public:
   NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type);
@@ -32,6 +32,8 @@ public:
   Vect<2u, double> getPos() const;
   Vect<2u, double> getSpeed() const;
   bool isAlly() const;
+  bool isSelected() const;
+  void setSelection(bool selected);
   Type getType() const;
   void setCooldown(unsigned int);
   void tick(std::vector<NanoBot *> &nearBots);

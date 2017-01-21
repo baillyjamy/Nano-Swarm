@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include "logic.hpp"
 
 Logic Logic::instance = Logic();
@@ -81,10 +82,23 @@ void Logic::tick()
     }
 }
 
-void Logic::selectRect(Vect<2u, double> pos, Vect<2u, double> size)
+void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 {
-  (void)pos;
-  (void)size;
+  std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end](NanoBot *bot)
+		{
+		  if (bot->getPos().x() >= start.x() && bot->getPos().x() < end.x()
+		      && bot->getPos().y() >= start.y() && bot->getPos().y() < end.y())
+		    {
+		      bot->setSelection(true);
+		      std::cout << "bot : " << " select" << std::endl;
+		    }
+		  else
+		    {
+		      bot->setSelection(false);
+		      std::cout << "bot : " << " not select" << std::endl;
+		    }
+		    return;
+		});
 }
 
 void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)

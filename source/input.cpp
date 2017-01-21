@@ -12,21 +12,6 @@ void Callback::setCallbacks(GLFWwindow *window)
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
 }
 
-void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
-{
-  (void)window;
-  (void)scancode;
-  (void)action;
-  (void)mode;
-  switch (key)
-    {
-    case GLFW_KEY_ESCAPE: // Escape close window
-      glfwSetWindowShouldClose(window, true);
-      break;
-    }
-  std::cout << "key : " << key << std::endl;
-}
-
 void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 {
   (void)window;
@@ -52,14 +37,12 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
 	}
       else
 	{
-	  if (dragOrigin == pos)
-	    {
-	      std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
-	    }
-	  else
-	    {
-	      std::cout << "drag release at: x " << pos.x() << ", y " << pos.y() << std::endl;
-	    }
+	  Vect<2u, double> start(std::min(pos.x(), dragOrigin.x()), std::min(pos.y(), dragOrigin.y()));
+	  Vect<2u, double> end(std::max(pos.x(), dragOrigin.x()), std::min(pos.y(), dragOrigin.y()));
+
+	  Logic::getInstance().selectRect(start, end);
+
+	  std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
 	  leftPressed = false;
 	}
     }
@@ -67,4 +50,19 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
     {
       std::cout << "Right at: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
+}
+
+void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
+{
+  (void)window;
+  (void)scancode;
+  (void)action;
+  (void)mode;
+  switch (key)
+    {
+    case GLFW_KEY_ESCAPE:
+      glfwSetWindowShouldClose(window, true);
+      break;
+    }
+  std::cout << "key : " << key << std::endl;
 }

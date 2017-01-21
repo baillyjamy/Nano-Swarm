@@ -3,7 +3,7 @@
 #include "logic.hpp"
 
 NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type)
-  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), isSelected(false)
+  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false)
 {
 }
 
@@ -22,6 +22,16 @@ Vect<2u, double> NanoBot::getPos() const
 Vect<2u, double> NanoBot::getSpeed() const
 {
   return speed;
+}
+
+bool NanoBot::isSelected() const
+{
+  return selected;
+}
+
+void NanoBot::setSelection(bool selected)
+{
+  this->selected = selected;
 }
 
 bool NanoBot::isAlly() const
