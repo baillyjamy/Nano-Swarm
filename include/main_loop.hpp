@@ -10,15 +10,9 @@ private:
   Logic logic;
   Display display;
 public:
-  MainLoop(Vect<2u, unsigned int> dim)
-    : display(dim, logic)
-  {}
+  MainLoop(Vect<2u, unsigned int> dim);
 
-  void tick()
-  {
-    display.render();
-    logic.tick();
-  }
+  void tick();
 };
 
 #endif // !MAIN_LOOP_HPP

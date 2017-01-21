@@ -37,6 +37,7 @@ public:
   void displayBots();
   void renderLights();
   void postProcess();
+  void displayMouseSelection();
 };
 
 #endif // !DISPLAY_HPP_

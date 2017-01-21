@@ -23,6 +23,9 @@ private:
   bool ally;
   Type type;
   unsigned int cooldown;
+
+  bool isSelected;
+
 public:
   NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type);
   bool update();

@@ -2,6 +2,7 @@
 # define INPUT_HPP_
 
 # include "my_opengl.hpp"
+# include "vect.hpp"
 
 class Callback
 {
@@ -14,9 +15,11 @@ public:
   static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
   // mouse data
-  static double x;
-  static double y;
+  static Vect<2u, double> pos;
+
+  // original click
   static bool leftPressed;
+  static Vect<2u, double> dragOrigin;
 };
 
 class KeyInput

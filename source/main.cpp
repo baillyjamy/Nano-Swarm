@@ -12,6 +12,7 @@ static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
   GLFWwindow *window;
 
   window = glfwCreateWindow(dim[0], dim[1], "Hello World", glfwGetPrimaryMonitor(), NULL);
+  // window = glfwCreateWindow(dim[0], dim[1], "Hello World", NULL, NULL);
   if (!window)
     throw "failed to open window";
   glfwSwapInterval(1);
@@ -29,6 +30,7 @@ int main(void)
   try
     {
       Vect<2u, unsigned int> dim(1920, 1080);
+      // Vect<2u, unsigned int> dim(800, 600);
       GLFWwindow *window = init(dim);
       // should probably be moved to constructor...
       MainLoop mainLoop(dim);
@@ -42,7 +44,7 @@ int main(void)
 	  glfwPollEvents();
 	}
     }
-  catch (char const *e)
+  catch (std::string const& e)
     {
       std::cerr << e << std::endl;
       glfwTerminate();
