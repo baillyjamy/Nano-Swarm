@@ -26,7 +26,6 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
   : size(size), offset{0.0f, 0.0f}, scale{static_cast<float>(size[1]) / static_cast<float>(size[0]), 1.0f},
   worldRenderContext(contextFromFiles("basic")),
   lightRenderContext(contextFromFiles("color")),
-  frontRenderContext{lightRenderContext.vao, worldRenderContext.program},
   postProcessContext(contextFromFiles("multiply")),
   fixtureBuffer(),
   lightBuffer(),
