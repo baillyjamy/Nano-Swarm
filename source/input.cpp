@@ -16,6 +16,13 @@ void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 {
   (void)window;
   pos = screenToGame({x, y});
+
+  if (leftPressed)
+    {
+      Vect<2u, double> start(std::min(pos.x(), dragOrigin.x()), std::min(pos.y(), dragOrigin.y()));
+      Vect<2u, double> end(std::max(pos.x(), dragOrigin.x()), std::max(pos.y(), dragOrigin.y()));
+      Logic::getInstance().selectRect(start, end);
+    }
 }
 
 void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
@@ -39,7 +46,7 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
     }
   else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
     {
-
+      Logic::getInstance().moveSelection(pos);
       std::cout << "Right at: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
 }

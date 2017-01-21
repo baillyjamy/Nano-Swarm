@@ -1,15 +1,20 @@
 #include <iostream>
 #include "nanobot.hpp"
 #include "logic.hpp"
+#include "light.hpp"
 
-NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type)
-  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false)
+NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type, Light *light)
+  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light)
 {
 }
 
 bool NanoBot::update()
 {
   pos += speed;
+  light->center = pos;
+  light->color = !ally ? Vect<4u, float>{1.0, 0.5, 0.5, 1.0}
+  : (selected ? Vect<4u, float>{1.0, 1.0, 0.5, 1.0}
+  : Vect<4u, float>{0.5, 1.0, 0.5, 1.0});
   speed *= 0.999;
   return !(cooldown -= !!cooldown);
 }
@@ -73,7 +78,7 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
   //   dir = dir.normalized() * 0.0001;
   // speed += dir;
 
-  speed -= pos * 0.000001;
+  //  speed -= pos * 0.000001;
 }
 
 void NanoBot::action(std::vector<NanoBot *> &nearBots, Logic &logic)
@@ -153,4 +158,9 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	  return;
 	}
     }
+}
+
+Light *NanoBot::getLight()
+{
+  return light;
 }

@@ -2,8 +2,8 @@
 #include "scrap.hpp"
 #include "logic.hpp"
 
-Scrap::Scrap(Vect<2u, double> const &pos, Vect<2u, double> const &speed)
-  : pos(pos), speed(speed), isSelected(false)
+Scrap::Scrap(Vect<2u, double> const &pos, Vect<2u, double> const &speed, NanoBot::Type type)
+  : pos(pos), speed(speed), type(type), isSelected(false)
 {
 }
 
@@ -20,4 +20,9 @@ Vect<2u, double> Scrap::getPos() const
 Vect<2u, double> Scrap::getSpeed() const
 {
   return speed;
+}
+
+NanoBot::Type Scrap::getType() const
+{
+  return type;
 }

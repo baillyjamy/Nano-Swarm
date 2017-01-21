@@ -14,6 +14,7 @@ private:
   std::vector<Scrap *> scraps;
   std::vector<Scrap *> scrapsToDelete;
   Vect<2u, double> selectStart;
+  std::vector<Light *> lights;
 public:
   static Logic& getInstance();
 
@@ -27,6 +28,10 @@ public:
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
   void destroyScrap(Scrap *);
   void moveSelection(Vect<2u, double> coord);
+  void createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type);
+  void addLight(Light *);
+  void removeLight(Light *);
+  std::vector<Light *> const &getLights() const;
 
   static constexpr double rNear = 0.05;
   static constexpr double rCollision = 0.01;

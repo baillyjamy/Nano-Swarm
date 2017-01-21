@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include "logic.hpp"
+#include "light.hpp"
 
 Logic Logic::instance = Logic();
 
@@ -8,37 +9,48 @@ Logic::Logic()
 {
   //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
-				   {-0.00 * (i % 10), 0},
-				   true,
-				   NanoBot::BRUTE));
+    createBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
+			  {-0.00 * (i % 10), 0},
+			  true,
+			  NanoBot::BRUTE);
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
-				   {+0.001, 0},
-				   false,
-				   NanoBot::BOMBER));
+    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
+			  {+0.001, 0},
+			  false,
+			  NanoBot::BOMBER);
   //line fight BRUTE vs BRUTE
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
-				   {-0.001 * (i % 10), 0},
-				   true,
-				   NanoBot::BRUTE));
+    createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
+			  {-0.001 * (i % 10), 0},
+			  true,
+			  NanoBot::BRUTE);
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
-				   {+0.001, 0},
-				   false,
-				   NanoBot::BRUTE));
+    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
+			  {+0.001, 0},
+			  false,
+			  NanoBot::BRUTE);
   //line fight SHOOTER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
-				   {+0.001, 0},
-				   true,
-				   NanoBot::SHOOTER));
+    createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
+			  {+0.001, 0},
+			  true,
+			  NanoBot::SHOOTER);
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
-				   {+0.001, 0},
-				   false,
-				   NanoBot::BRUTE));
+    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
+			  {+0.001, 0},
+			  false,
+			  NanoBot::BRUTE);
+}
+
+void Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type)
+{
+  Light *l = new Light(Light{{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, 0.05f});
+  addLight(l);
+  nanoBots.push_back(new NanoBot(pos,
+				 speed,
+				 ally,
+				 type,
+				 l));
 }
 
 Logic& Logic::getInstance()
@@ -51,6 +63,7 @@ void Logic::tick()
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, n, &nearBots](NanoBot *m)
+
 		    {
 		      if (n != m && isNear(*n, *m))
 			nearBots.push_back(m);
@@ -63,7 +76,10 @@ void Logic::tick()
   while (it != nanoBots.end())
     {
       if (std::find(toDelete.begin(), toDelete.end(), *it) != toDelete.end())
-	it = nanoBots.erase(it);
+	{
+	  scraps.push_back(new Scrap((*it)->getPos(), (*it)->getSpeed(), (*it)->getType()));
+	  it = nanoBots.erase(it);
+	}
       else
 	++it;
     }
@@ -77,7 +93,7 @@ void Logic::tick()
       if (std::find(scrapsToDelete.begin(), scrapsToDelete.end(), *it_r) != scrapsToDelete.end())
 	it_r = scraps.erase(it_r);
       else
-	++it;
+	++it_r;
     }
 }
 
@@ -113,6 +129,12 @@ void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
 void Logic::moveSelection(Vect<2u, double> coord)
 {
   Vect<2u, double> move = coord - selectStart;
+
+  Vect<2u, double> averagePos(0, 0);
+
+  // std::for_each(selectedBots.begin(), selectedBots.end(), [&averagePos](NanoBot *bot) {
+  //     averagePos += bot->getPos();
+  //   });
   // TODO: Each unit shouldn't move to the coord, but move rellativelly to it's offset to the original selected point.
 }
 
@@ -144,8 +166,8 @@ bool Logic::isTouch(NanoBot const &centre, NanoBot const &other)
 
 void Logic::kill(NanoBot *n)
 {
+  removeLight(n->getLight());
   toDelete.push_back(n);
-
   // remove if selected
   std::vector<NanoBot *>::iterator it = std::find(selectedBots.begin(), selectedBots.end(), n);
   if (it != selectedBots.end())
@@ -155,4 +177,23 @@ void Logic::kill(NanoBot *n)
 void Logic::destroyScrap(Scrap *r)
 {
   scrapsToDelete.push_back(r);
+}
+
+
+void Logic::addLight(Light *l)
+{
+  lights.push_back(l);
+}
+
+void Logic::removeLight(Light *l)
+{
+  std::vector<Light *>::iterator pos = std::find(lights.begin(), lights.end(), l);
+
+  if (pos != lights.end())
+    lights.erase(pos);
+}
+
+std::vector<Light *> const &Logic::getLights() const
+{
+  return lights;
 }
