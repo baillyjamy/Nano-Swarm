@@ -90,7 +90,7 @@ void NanoBot::action(std::vector<NanoBot *> &nearBots, Logic &logic)
 		}
 	      break;
 	    case BOMBER:
-	      if ((pos - (*it)->pos).length() < 0.1)
+	      if ((pos - (*it)->pos).length() < 0.0002)
 		{
 		  std::cout << "BOMBER!!" << std::endl;
 		  cooldown = 100;

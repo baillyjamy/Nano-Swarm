@@ -9,10 +9,10 @@ Logic::Logic()
   //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
-				   {-0.001 * (i % 10), 0}, true, NanoBot::BRUTE));
+				   {-0.00 * (i % 10), 0}, true, NanoBot::BRUTE));
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
-				   {+0.001, 0}, false, NanoBot::BRUTE));
+				   {+0.001, 0}, false, NanoBot::BOMBER));
   //line fight BRUTE vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
