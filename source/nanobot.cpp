@@ -132,6 +132,8 @@ void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nea
   // returns true if the nanobot died during his action
   switch (type)
     {
+    case WORKER:
+      workerAction(nearBots, nearScraps, logic);
     case BRUTE:
       bruteAction(nearBots, logic);
       break;
@@ -144,6 +146,10 @@ void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nea
     default:
       break;
     }
+}
+
+void NanoBot::workerAction(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic)
+{
 }
 
 void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
