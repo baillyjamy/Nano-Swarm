@@ -18,7 +18,7 @@ private:
 
 public:
   Scrap(Vect<2u, double> const &, Vect<2u, double> const &, NanoBot::Type type);
-  bool update();
+  void update(std::vector<NanoBot *> const &near);
   Vect<2u, double> getPos() const;
   Vect<2u, double> getSpeed() const;
   NanoBot::Type getType() const;

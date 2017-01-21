@@ -133,7 +133,8 @@ void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nea
   switch (type)
     {
     case WORKER:
-      workerAction(nearBots, nearScraps, logic);
+      workerAction(nearScraps, logic);
+      break;
     case BRUTE:
       bruteAction(nearBots, logic);
       break;
@@ -148,8 +149,80 @@ void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nea
     }
 }
 
-void NanoBot::workerAction(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic)
+void NanoBot::workerAction(std::vector<Scrap *> &nearScraps, Logic &logic)
 {
+  Scrap *firstWorker = nullptr;
+  Scrap *firstBrute = nullptr;
+  Scrap *firstShooter = nullptr;
+  Scrap *firstBomber = nullptr;
+
+  for (std::vector<Scrap *>::iterator it(nearScraps.begin()); it != nearScraps.end(); ++it)
+    {
+      if ((pos - (*it)->getPos()).length() < WORKER::collectRange)
+	{
+	  switch ((*it)->getType())
+	    {
+	    case WORKER:
+	      if (firstWorker != nullptr)
+		{
+		  logic.createBot(pos,
+			    {0, 0},
+			    true,
+			    NanoBot::WORKER);
+		  logic.destroyScrap(firstWorker);
+		  logic.destroyScrap((*it));
+		  firstWorker = nullptr;
+		}
+	      else
+		firstWorker = *it;
+	      break;
+	    case BRUTE:
+	      if (firstBrute != nullptr)
+		{
+		  logic.createBot(pos,
+				  {0, 0},
+				  true,
+				  NanoBot::BRUTE);
+		  logic.destroyScrap(firstBrute);
+		  logic.destroyScrap((*it));
+		  firstBrute = nullptr;
+		}
+	      else
+		firstBrute = *it;
+	      break;
+	    case SHOOTER:
+	      if (firstShooter != nullptr)
+		{
+		  logic.createBot(pos,
+				  {0, 0},
+				  true,
+				  NanoBot::SHOOTER);
+		  logic.destroyScrap(firstShooter);
+		  logic.destroyScrap((*it));
+		  firstShooter = nullptr;
+		}
+	      else
+		firstShooter = *it;
+	      break;
+	    case BOMBER:
+	      if (firstBomber != nullptr)
+		{
+		  logic.createBot(pos,
+				  {0, 0},
+				  true,
+				  NanoBot::BOMBER);
+		  logic.destroyScrap(firstBomber);
+		  logic.destroyScrap((*it));
+		  firstBomber = nullptr;
+		}
+	      else
+		firstBomber = *it;
+	      break;
+	    default:
+	      break;
+	    }
+	}
+    }
 }
 
 void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
