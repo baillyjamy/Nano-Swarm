@@ -86,18 +86,20 @@ void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 {
   std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end](NanoBot *bot)
 		{
-		  if (bot->getPos().x() >= start.x() && bot->getPos().x() < end.x()
-		      && bot->getPos().y() >= start.y() && bot->getPos().y() < end.y())
+		  if (bot->isAlly())
 		    {
-		      bot->setSelection(true);
-		      std::cout << "bot : " << " select" << std::endl;
+		      if (bot->getPos().x() >= start.x() && bot->getPos().x() <= end.x() &&
+			  bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y())
+			{
+			  bot->setSelection(true);
+			  std::cout << "bot : " << " select" << std::endl;
+			}
+		      else
+			{
+			  bot->setSelection(false);
+			}
+		      return;
 		    }
-		  else
-		    {
-		      bot->setSelection(false);
-		      std::cout << "bot : " << " not select" << std::endl;
-		    }
-		    return;
 		});
 }
 
