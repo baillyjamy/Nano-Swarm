@@ -11,6 +11,12 @@ private:
 public:
   Logic();
   void tick();
+  bool isInRange(NanoBot centre, NanoBot other, double const ray);
+  bool isNear(NanoBot centre, NanoBot other);
+  bool isTouch(NanoBot centre, NanoBot other);
+
+  static const double rNear;
+  static const double rCollision;
 };
 
 #endif
