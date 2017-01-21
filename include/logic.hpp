@@ -7,10 +7,11 @@
 class Logic
 {
 private:
-  std::vector<NanoBot *> nanobots;
+  std::vector<NanoBot *> nanoBots;
 public:
   Logic();
   void tick();
+  std::vector<NanoBot *> const &getNanoBots() const;
 };
 
 #endif

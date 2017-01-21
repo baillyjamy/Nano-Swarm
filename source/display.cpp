@@ -130,34 +130,38 @@ void Display::renderLights()
   glDisable(GL_BLEND);
 }
 
-void Display::debugTriangle()
+void Display::displayBots()
 {
   Bind<RenderContext> bind(worldRenderContext);
-  // float *data = new float[logic.physics.getFixtureCount() * 4 * 4 * 3];
-  // unsigned int i(0);
+  float *data = new float[logic.getNanoBots().size() * 4 * 4 * 3];
+  unsigned int i(0);
 
-  // for (unsigned int j(0); j < logic.physics.getFixtureCount(); j++)
-  //   {
-  //     Vect<3u, Vect<2u, float>> corners = logic.physics.getFixtureCoords(j);
-
-  //     for (unsigned int k(0); k < 3; k++)
-  // 	{
-  // 	  data[i++] = corners[k][0];
-  // 	  data[i++] = corners[k][1];
-  // 	  data[i++] = 1.0f;
-  // 	  data[i++] = logic.physics.fixtureDataPool[j].hit;
-  // 	}
-  //   }
-  // glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
-  // glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
-  // delete [] data;
+  for (unsigned int j(0); j < logic.getNanoBots().size(); j++)
+    {
+      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.01);
+      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[0];
+      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[1];
+      data[i++] = 1.0f;
+      data[i++] = 1.0f;
+      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] - d[0];
+      data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] - d[1];
+      data[i++] = 1.0f;
+      data[i++] = 1.0f;
+      data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] - d[0];
+      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] - d[1];
+      data[i++] = 1.0f;
+      data[i++] = 1.0f;
+    }
+  glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
+  glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
+  delete [] data;
   setOffsetAndScale(worldRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
   glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-  // glDrawArrays(GL_TRIANGLES, 0, i / 4);
+  glDrawArrays(GL_TRIANGLES, 0, i / 4);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glDisable(GL_BLEND);
 }
@@ -181,7 +185,7 @@ void Display::render()
   lights[0].center += {-0.01, 0.01};
   //  lights[0].center[0] -= 0.01;
   renderLights();
-  debugTriangle();
+  displayBots();
   postProcess();
   fpsCounter.tick();
 }
