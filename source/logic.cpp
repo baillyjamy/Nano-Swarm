@@ -66,6 +66,19 @@ void Logic::tick()
       else
 	++it;
     }
+
+  std::for_each(remains.begin(), remains.end(), [this](Remain *r){
+      if (r->update())
+	r->action(*this);
+    });
+  std::vector<Remain *>::iterator it_r(remains.begin());
+  while (it_r != remains.end())
+    {
+      if (std::find(remainsToDelete.begin(), remainsToDelete.end(), *it_r) != remainsToDelete.end())
+	it_r = remains.erase(it_r);
+      else
+	++it;
+    }
 }
 
 void Logic::selectRect(Vect<2u, double> pos, Vect<2u, double> size)
@@ -118,4 +131,9 @@ void Logic::kill(NanoBot *n)
   toDelete.push_back(n);
   // nanoBots.erase(std::find(nanoBots.begin(), nanoBots.end(), n));
   // delete n;
+}
+
+void Logic::destroyRemain(Remain *r)
+{
+  remainsToDelete.push_back(r);
 }

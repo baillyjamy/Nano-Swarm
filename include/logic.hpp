@@ -3,12 +3,15 @@
 
 # include <vector>
 # include "nanobot.hpp"
+# include "remain.hpp"
 
 class Logic
 {
 private:
   std::vector<NanoBot *> nanoBots;
   std::vector<NanoBot *> toDelete;
+  std::vector<Remain *> remains;
+  std::vector<Remain *> remainsToDelete;
   Vect<2u, double> selectStart;
 public:
   static Logic& getInstance();
@@ -21,6 +24,7 @@ public:
   void kill(NanoBot *);
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
+  void destroyRemain(Remain *);
   void move(Vect<2u, double> coord);
 
   static constexpr double rNear = 0.05;
