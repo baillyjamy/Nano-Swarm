@@ -36,6 +36,30 @@ public:
   void setCooldown(unsigned int);
   void tick(std::vector<NanoBot *> &nearBots);
   void action(std::vector<NanoBot *> &nearBots, Logic &);
+
+private:
+  // returns true if the nanobot died during his action
+  void bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic);
+  void shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic);
+  void bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic);
 };
+
+namespace BRUTE
+{
+  constexpr double attackRange = 0.0002;
+  constexpr double cooldown = 100;
+}
+
+namespace SHOOTER
+{
+  constexpr double attackRange = 0.05;
+  constexpr double cooldown = 300;
+}
+
+namespace BOMBER
+{
+  constexpr double attackRange = 0.0002;
+  constexpr double explosionRange = 0.003;
+}
 
 #endif

@@ -5,6 +5,13 @@ Vect<2u, double> Callback::pos(0, 0);
 Vect<2u, double> Callback::dragOrigin(0, 0);
 bool Callback::leftPressed = false;
 
+void Callback::setCallbacks(GLFWwindow *window)
+{
+  glfwSetKeyCallback(window, keyCallback);
+  glfwSetCursorPosCallback(window, mouseCallback);
+  glfwSetMouseButtonCallback(window, mouseButtonCallback);
+}
+
 void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
   (void)window;
@@ -46,9 +53,13 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
       else
 	{
 	  if (dragOrigin == pos)
-	    std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
+	    {
+	      std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
+	    }
 	  else
-	    std::cout << "drag release at: x " << pos.x() << ", y " << pos.y() << std::endl;
+	    {
+	      std::cout << "drag release at: x " << pos.x() << ", y " << pos.y() << std::endl;
+	    }
 	  leftPressed = false;
 	}
     }
@@ -56,11 +67,4 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
     {
       std::cout << "Right at: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
-}
-
-void Callback::setCallbacks(GLFWwindow *window)
-{
-  glfwSetKeyCallback(window, keyCallback);
-  glfwSetCursorPosCallback(window, mouseCallback);
-  glfwSetMouseButtonCallback(window, mouseButtonCallback);
 }

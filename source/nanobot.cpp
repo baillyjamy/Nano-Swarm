@@ -41,6 +41,7 @@ void NanoBot::setCooldown(unsigned int delay)
 
 void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 {
+  (void)nearBots;
   // Code to seperate nanobots that does not work
   // Vect<2u, double> dir{0.0, 0.0};
 
@@ -66,38 +67,79 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 
 void NanoBot::action(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
+  // returns true if the nanobot died during his action
+  switch (type)
+    {
+    case BRUTE:
+      bruteAction(nearBots, logic);
+      break;
+    case SHOOTER:
+      shooterAction(nearBots, logic);
+      break;
+    case BOMBER:
+      bomberAction(nearBots, logic);
+      break;
+    default:
+      break;
+    }
+}
+
+void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
+{
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
       if ((*it)->isAlly() != ally)
-  	{
-	  switch (type)
+	{
+	  if ((pos - (*it)->pos).length() < BRUTE::attackRange)
 	    {
-	    case BRUTE:
-	      if ((pos - (*it)->pos).length() < 0.0002)
+	      std::cout << "ACTION!!" << std::endl;
+	      cooldown = BRUTE::cooldown;
+	      Type ennemy = (*it)->getType();
+	      logic.kill(*it);
+	      if (ennemy == BRUTE)
 		{
-		  std::cout << "ACTION!!" << std::endl;
-		  cooldown = 100;
-		  logic.kill(*it);
+		  logic.kill(this);
+		  return;
 		}
-	      break;
-	    case SHOOTER:
-	      if ((pos - (*it)->pos).length() < 0.05)
-		{
-		  std::cout << "SHOOT!!" << std::endl;
-		  cooldown = 100;
-		  logic.kill(*it);
-		}
-	      break;
-	    case BOMBER:
-	      if ((pos - (*it)->pos).length() < 0.0002)
-		{
-		  std::cout << "BOMBER!!" << std::endl;
-		  cooldown = 100;
-		  logic.kill(*it);
-		}
-	    default:
-	      break;
 	    }
-  	}
+	}
+    }
+}
+
+void NanoBot::shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic)
+{
+  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
+    {
+      if ((*it)->isAlly() != ally)
+	{
+	  if ((pos - (*it)->pos).length() < SHOOTER::attackRange)
+	    {
+	      std::cout << "SHOOT!!" << std::endl;
+	      cooldown = SHOOTER::cooldown;
+	      logic.kill(*it);
+	    }
+	}
+    }
+}
+
+void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
+{
+  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
+    {
+      if ((pos - (*it)->pos).length() < BOMBER::attackRange)
+	{
+	  std::cout << "BOMBER!!" << std::endl;
+
+	  // kill every nanobot in range
+	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
+	    {
+	      if ((pos - (*it)->pos).length() < BOMBER::explosionRange)
+		logic.kill(*it);
+	    }
+
+	  // kill himself
+	  logic.kill(this);
+	  return;
+	}
     }
 }

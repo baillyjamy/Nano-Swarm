@@ -7,7 +7,7 @@
 class MainLoop
 {
 private:
-  Logic logic;
+  Logic& logic;
   Display display;
 public:
   MainLoop(Vect<2u, unsigned int> dim);

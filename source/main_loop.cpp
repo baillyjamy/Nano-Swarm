@@ -1,7 +1,7 @@
 #include "main_loop.hpp"
 
 MainLoop::MainLoop(Vect<2u, unsigned int> dim)
-  : display(dim, logic)
+  : logic(Logic::getInstance()), display(dim, logic)
 {
 }
 

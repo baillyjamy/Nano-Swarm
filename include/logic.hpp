@@ -11,17 +11,26 @@ private:
   std::vector<NanoBot *> toDelete;
   Vect<2u, double> selectStart;
 public:
-  Logic();
+  static Logic& getInstance();
+
   void tick();
   std::vector<NanoBot *> const &getNanoBots() const;
   bool isInRange(NanoBot const &centre, NanoBot const &other, double const ray);
   bool isNear(NanoBot const &centre, NanoBot const &other);
   bool isTouch(NanoBot const &centre, NanoBot const &other);
   void kill(NanoBot *);
-  void select(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
+  void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
+  void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
   void move(Vect<2u, double> coord);
-  static const double rNear;
-  static const double rCollision;
+
+  static constexpr double rNear = 0.05;
+  static constexpr double rCollision = 0.01;
+
+private:
+  Logic();
+
+  static Logic instance;
+
 };
 
 #endif

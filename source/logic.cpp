@@ -1,32 +1,48 @@
 #include <algorithm>
 #include "logic.hpp"
 
-const double Logic::rNear = 0.05;
-const double Logic::rCollision = 0.01;
+Logic Logic::instance = Logic();
 
 Logic::Logic()
 {
   //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
-				   {-0.00 * (i % 10), 0}, true, NanoBot::BRUTE));
+				   {-0.00 * (i % 10), 0},
+				   true,
+				   NanoBot::BRUTE));
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
-				   {+0.001, 0}, false, NanoBot::BOMBER));
+				   {+0.001, 0},
+				   false,
+				   NanoBot::BOMBER));
   //line fight BRUTE vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
-				   {-0.001 * (i % 10), 0}, true, NanoBot::BRUTE));
+				   {-0.001 * (i % 10), 0},
+				   true,
+				   NanoBot::BRUTE));
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
-				   {+0.001, 0}, false, NanoBot::BRUTE));
+				   {+0.001, 0},
+				   false,
+				   NanoBot::BRUTE));
   //line fight SHOOTER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
-				   {+0.001, 0}, true, NanoBot::SHOOTER));
+				   {+0.001, 0},
+				   true,
+				   NanoBot::SHOOTER));
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
-				   {+0.001, 0}, false, NanoBot::BRUTE));
+				   {+0.001, 0},
+				   false,
+				   NanoBot::BRUTE));
+}
+
+Logic& Logic::getInstance()
+{
+  return instance;
 }
 
 void Logic::tick()
@@ -52,7 +68,13 @@ void Logic::tick()
     }
 }
 
-void Logic::select(Vect<2u, double> coord, NanoBot::Type type)
+void Logic::selectRect(Vect<2u, double> pos, Vect<2u, double> size)
+{
+  (void)pos;
+  (void)size;
+}
+
+void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
 {
   // TODO: select unit surrounding units. If type != UNKNOWN, select only units of that type.
   // set start pos to get relative move

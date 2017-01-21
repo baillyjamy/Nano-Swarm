@@ -3,23 +3,23 @@
 
 # include "my_opengl.hpp"
 # include "vect.hpp"
+# include "logic.hpp"
 
-class Callback
+namespace Callback
 {
-public:
-  static void setCallbacks(GLFWwindow *window);
+  void setCallbacks(GLFWwindow *window);
 
-  static void mouseCallback(GLFWwindow *window, double x, double y);
-  static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+  void mouseCallback(GLFWwindow *window, double x, double y);
+  void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 
-  static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
+  void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
   // mouse data
-  static Vect<2u, double> pos;
+  extern Vect<2u, double> pos;
 
   // original click
-  static bool leftPressed;
-  static Vect<2u, double> dragOrigin;
+  extern bool leftPressed;
+  extern Vect<2u, double> dragOrigin;
 };
 
 class KeyInput
