@@ -46,11 +46,17 @@ public:
 
 private:
   // returns true if the nanobot died during his action
-  void workerAction(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic);
+  void workerAction(std::vector<Scrap *> &nearScraps, Logic &logic);
   void bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic);
   void shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic);
   void bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic);
 };
+
+namespace WORKER
+{
+  constexpr double collectRange = 0.0002;
+  constexpr double cooldown = 10;
+}
 
 namespace BRUTE
 {
