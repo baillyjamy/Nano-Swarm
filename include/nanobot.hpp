@@ -20,7 +20,7 @@ public:
       UNKNOWN = 4,
     };
 
-  static constexpr Vect<3u, double> botColors[UNKNOWN] = {
+  static constexpr const Vect<3u, double> botColors[UNKNOWN] = {
     {0.5, 0.5, 0.5},
     {1.0, 0.15, 0.15},
     {0.15, 0.15, 1.0},

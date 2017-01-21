@@ -12,7 +12,7 @@ Logic::Logic()
     createBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
 	      {-0.00 * (i % 10), 0},
 	      true,
-	      NanoBot::BRUTE);
+	      NanoBot::WORKER);
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
 	      {+0.001, 0},
@@ -88,9 +88,14 @@ void Logic::tick()
       else
 	++it;
     }
-
   std::for_each(scraps.begin(), scraps.end(), [this](Scrap *r){
-      r->update();
+      std::vector<NanoBot *> nearBots;
+      std::for_each(nanoBots.begin(), nanoBots.end(), [this, r, &nearBots](NanoBot *m)
+		    {
+		      if (m->getType() == NanoBot::WORKER && isNear(*r, *m))
+			nearBots.push_back(m);
+		    });
+      r->update(nearBots);
     });
   std::vector<Scrap *>::iterator it_r(scraps.begin());
   while (it_r != scraps.end())

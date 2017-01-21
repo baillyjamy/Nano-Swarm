@@ -34,6 +34,7 @@ public:
   void render();
   void setOffsetAndScale(Program program);
   void displayBots();
+  void displayScraps();
   void renderLights();
   void postProcess();
   void displayMouseSelection();

@@ -1,9 +1,9 @@
 #version 130
 
-in vec2 coord;
+in vec3 vert_color;
 out vec4 color;
 
 void main()
 {
-  color = vec4(coord, 1.0f, 1.0f);
+  color = vec4(vert_color, 1.0f);
 }

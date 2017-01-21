@@ -10,6 +10,7 @@
 #include "math.hpp"
 #include "logic.hpp"
 #include "input.hpp"
+#include "nanobot.hpp"
 
 static inline RenderContext contextFromFiles(std::string name)
 {
@@ -115,7 +116,7 @@ void Display::renderLights()
   delete [] data;
   setOffsetAndScale(lightRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
-  glClearColor(0.1f, 0.1f, 0.2f, 0.0f);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
@@ -132,23 +133,24 @@ void Display::displayBots()
 
   for (unsigned int j(0); j < logic.getNanoBots().size(); j++)
     {
-      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.01);
+      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.015);
+      Vect<3u, double> color(1.0, 1.0, 1.0);//NanoBot::botColors[logic.getNanoBots()[j]->getType()]);
 
       data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[1];
-      data[i++] = 1.0f;
-      data[i++] = 1.0f;
-      data[i++] = 1.0f;
-      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] - d[0];
-      data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] - d[1];
-      data[i++] = 0.0f;
-      data[i++] = 1.0f;
-      data[i++] = 1.0f;
-      data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] - d[0];
-      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] - d[1];
-      data[i++] = 1.0f;
-      data[i++] = 0.0f;
-      data[i++] = 1.0f;
+      data[i++] = color[0];
+      data[i++] = color[1];
+      data[i++] = color[2];
+      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] * 0.5 - d[0];
+      data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] * 0.5 - d[1];
+      data[i++] = color[0];
+      data[i++] = color[1];
+      data[i++] = color[2];
+      data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] * 0.5 - d[0];
+      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] * 0.5 - d[1];
+      data[i++] = color[0];
+      data[i++] = color[1];
+      data[i++] = color[2];
     }
   glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
   glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
@@ -157,6 +159,37 @@ void Display::displayBots()
   glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
   glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+  glDrawArrays(GL_TRIANGLES, 0, i / 5);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glDisable(GL_BLEND);
+}
+
+void Display::displayScraps()
+{
+  Bind<RenderContext> bind(worldRenderContext);
+  float *data = new float[logic.getScraps().size() * 4 * 5 * 6];
+  unsigned int i(0);
+
+  for (unsigned int j(0); j < logic.getScraps().size(); j++)
+    {
+      Vect<3u, double> color(1.0, 1.0, 1.0);//NanoBot::botColors[logic.getNanoBots()[j]->getType()]);
+
+      for (unsigned int q(0u); q < 6; ++q)
+	{
+	  data[i++] = logic.getScraps()[j]->getPos()[0] + ((q <= 1 || q == 3) ? -0.01 : 0.01);
+	  data[i++] = logic.getScraps()[j]->getPos()[1] + ((q & 1) ? -0.01 : 0.01);
+	  data[i++] = color[0];
+	  data[i++] = color[1];
+	  data[i++] = color[2];
+	}
+    }
+  glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
+  glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
+  delete [] data;
+  setOffsetAndScale(worldRenderContext.program);
+  glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glDrawArrays(GL_TRIANGLES, 0, i / 5);
@@ -175,8 +208,6 @@ void Display::displayMouseSelection()
 
   for (unsigned int j(0); j < 4; j++)
     {
-      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.01);
-
       data[i++] = (j == 1 || j == 2) ? Callback::dragOrigin[0] : Callback::pos[0];
       data[i++] = (j <= 1) ? Callback::dragOrigin[1] : Callback::pos[1];
       data[i++] = 1.0f;
@@ -212,6 +243,7 @@ void Display::render()
   renderLights();
   displayMouseSelection();
   displayBots();
+  displayScraps();
   postProcess();
   fpsCounter.tick();
 }
