@@ -19,3 +19,8 @@ Vect<2u, double> NanoBot::getSpeed()
 {
   return speed;
 }
+
+bool NanoBot::isEnemy()
+{
+  return enemy;
+}
