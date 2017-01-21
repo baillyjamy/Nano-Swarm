@@ -105,6 +105,12 @@ public:
     return (*this);
   }
 
+  Vect<dim, T>& operator*=(T const &other)
+  {
+    this->applyOnSelf([this, other](unsigned int i){return this->data[i] * other;});
+    return (*this);
+  }
+
 
   Vect<dim, T>& operator^=(Vect<dim, T> const &other)
   {
@@ -230,7 +236,7 @@ public:
 
   Vect<dim, T> normalized()
   {
-    return ((*this) / sqrt(length()));
+    return length() > 0 ? ((*this) / sqrt(length())) : *this;
   }
 
   template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type* = nullptr>

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fenv.h>
 #include "my_opengl.hpp"
 #include "main_loop.hpp"
 #include "input.hpp"
@@ -24,6 +25,7 @@ static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
 
 int main(void)
 {
+  feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
   try
     {
       Vect<2u, unsigned int> dim(1920, 1080);

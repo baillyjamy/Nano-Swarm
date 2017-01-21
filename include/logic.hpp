@@ -8,13 +8,15 @@ class Logic
 {
 private:
   std::vector<NanoBot *> nanoBots;
+  std::vector<NanoBot *> toDelete;
 public:
   Logic();
   void tick();
   std::vector<NanoBot *> const &getNanoBots() const;
-  bool isInRange(NanoBot centre, NanoBot other, double const ray);
-  bool isNear(NanoBot centre, NanoBot other);
-  bool isTouch(NanoBot centre, NanoBot other);
+  bool isInRange(NanoBot const &centre, NanoBot const &other, double const ray);
+  bool isNear(NanoBot const &centre, NanoBot const &other);
+  bool isTouch(NanoBot const &centre, NanoBot const &other);
+  void kill(NanoBot *);
 
   static const double rNear;
   static const double rCollision;
