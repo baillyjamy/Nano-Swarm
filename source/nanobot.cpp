@@ -31,7 +31,8 @@ bool NanoBot::isSelected() const
 
 void NanoBot::setSelection(bool selected)
 {
-  this->selected = selected;
+  if (ally)
+    this->selected = selected;
 }
 
 bool NanoBot::isAlly() const
