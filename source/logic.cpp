@@ -131,7 +131,7 @@ void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
   selectStart = coord;
 }
 
-void Logic::moveSelection(Vect<2u, double> coord)
+void Logic::moveSelection(Vect<2u, double> target)
 {
   if (selectedBots.empty())
     return;
@@ -143,10 +143,10 @@ void Logic::moveSelection(Vect<2u, double> coord)
     });
   averagePos /= selectedBots.size();
 
-  std::for_each(selectedBots.begin(), selectedBots.end(), [coord, &averagePos](NanoBot *bot) {
+  std::for_each(selectedBots.begin(), selectedBots.end(), [target, &averagePos](NanoBot *bot) {
       Vect<2u, double> offset(bot->getPos() - averagePos);
-      bot->move(offset + coord);
-      // bot->move(coord);
+      bot->move(offset / 2 + target);
+      // bot->move(target);
     });
 }
 
