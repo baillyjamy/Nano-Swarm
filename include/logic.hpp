@@ -7,10 +7,11 @@
 class Logic
 {
 private:
-  std::vector<NanoBot *> nanobots;
+  std::vector<NanoBot *> nanoBots;
 public:
   Logic();
   void tick();
+  std::vector<NanoBot *> const &getNanoBots() const;
   bool isInRange(NanoBot centre, NanoBot other, double const ray);
   bool isNear(NanoBot centre, NanoBot other);
   bool isTouch(NanoBot centre, NanoBot other);

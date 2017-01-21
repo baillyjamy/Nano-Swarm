@@ -6,13 +6,22 @@ const double Logic::rCollision = 0.01;
 
 Logic::Logic()
 {
+  for (unsigned int i(0); i < 100; i++)
+    {
+      nanoBots.push_back(new NanoBot({(i % 10) * 0.02, (i / 10) * 0.02}, {0.01, 0.0001 * i}));
+    }
 }
 
 void Logic::tick()
 {
-  std::for_each(nanobots.begin(), nanobots.end(), [](NanoBot *n){
+  std::for_each(nanoBots.begin(), nanoBots.end(), [](NanoBot *n){
       n->update();
     });
+}
+
+std::vector<NanoBot *> const &Logic::getNanoBots() const
+{
+  return nanoBots;
 }
 
 bool Logic::isInRange(NanoBot centre, NanoBot other, double const ray)

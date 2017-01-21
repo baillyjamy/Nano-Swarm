@@ -34,7 +34,7 @@ public:
   ~Display();
   void render();
   void setOffsetAndScale(Program program);
-  void debugTriangle();
+  void displayBots();
   void renderLights();
   void postProcess();
 };

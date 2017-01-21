@@ -14,3 +14,8 @@ Vect<2u, double> NanoBot::getPos()
 {
   return pos;
 }
+
+Vect<2u, double> NanoBot::getSpeed()
+{
+  return speed;
+}
