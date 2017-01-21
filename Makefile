@@ -18,6 +18,7 @@ SRCS_CPP = 	source/main.cpp \
 		source/my_opengl.cpp \
 		source/display.cpp \
 		source/fps_counter.cpp \
+		source/input.cpp \
 
 OBJS = 	$(SRCS_C:.c=.o) $(SRCS_CPP:.cpp=.o)
 

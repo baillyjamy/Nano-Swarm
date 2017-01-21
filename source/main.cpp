@@ -2,6 +2,7 @@
 #include <string>
 #include "my_opengl.hpp"
 #include "main_loop.hpp"
+#include "input.hpp"
 
 static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
 {
@@ -25,10 +26,12 @@ int main(void)
 {
   try
     {
-      Vect<2u, unsigned int> dim(1920, 1080); 
+      Vect<2u, unsigned int> dim(1920, 1080);
       GLFWwindow *window = init(dim);
       // should probably be moved to constructor...
       MainLoop mainLoop(dim);
+
+      Callback::setCallbacks(window);
 
       while (!glfwWindowShouldClose(window))
 	{
