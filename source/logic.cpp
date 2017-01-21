@@ -63,14 +63,19 @@ void Logic::tick()
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, n, &nearBots](NanoBot *m)
-
 		    {
 		      if (n != m && isNear(*n, *m))
 			nearBots.push_back(m);
 		    });
       n->tick(nearBots);
+      std::vector<Scrap *> nearScraps;
+      std::for_each(scraps.begin(), scraps.end(), [this, n, &nearScraps](Scrap *o)
+		    {
+		      if (isNear(*o, *n))
+			nearScraps.push_back(o);
+		    });
       if (n->update())
-	n->action(nearBots, *this);
+	n->action(nearBots, nearScraps, *this);
     });
   std::vector<NanoBot *>::iterator it(nanoBots.begin());
   while (it != nanoBots.end())
@@ -146,24 +151,6 @@ std::vector<NanoBot *> const &Logic::getNanoBots() const
 std::vector<Scrap *> const &Logic::getScraps() const
 {
   return scraps;
-}
-
-bool Logic::isInRange(NanoBot const &centre, NanoBot const &other, double const ray)
-{
-  double dx = centre.getPos().x() - other.getPos().x();
-  double dy = centre.getPos().y() - other.getPos().y();
-
-  return dx * dx + dy * dy < ray;
-}
-
-bool Logic::isNear(NanoBot const &centre, NanoBot const &other)
-{
-  return (isInRange(centre, other, rNear));
-}
-
-bool Logic::isTouch(NanoBot const &centre, NanoBot const &other)
-{
-  return (isInRange(centre, other, rCollision));
 }
 
 void Logic::kill(NanoBot *n)

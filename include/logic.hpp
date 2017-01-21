@@ -21,9 +21,6 @@ public:
   void tick();
   std::vector<NanoBot *> const &getNanoBots() const;
   std::vector<Scrap *> const &getScraps() const;
-  bool isInRange(NanoBot const &centre, NanoBot const &other, double const ray);
-  bool isNear(NanoBot const &centre, NanoBot const &other);
-  bool isTouch(NanoBot const &centre, NanoBot const &other);
   void kill(NanoBot *);
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
@@ -33,6 +30,24 @@ public:
   void addLight(Light *);
   void removeLight(Light *);
   std::vector<Light *> const &getLights() const;
+
+  template <typename T>
+  bool isInRange(T const &centre, NanoBot const &other, double const ray) {
+    double dx = centre.getPos().x() - other.getPos().x();
+    double dy = centre.getPos().y() - other.getPos().y();
+
+    return dx * dx + dy * dy < ray;
+  }
+
+  template <typename T>
+  bool isNear(T const &centre, NanoBot const &other) {
+    return isInRange(centre, other, rNear);
+  }
+
+  template <typename T>
+  bool isTouch(T const &centre, NanoBot const &other) {
+    return isInRange(centre, other, rCollision);
+  }
 
   static constexpr double rNear = 0.05;
   static constexpr double rCollision = 0.01;
