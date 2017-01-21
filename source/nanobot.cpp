@@ -41,6 +41,9 @@ void NanoBot::setCooldown(unsigned int delay)
 
 void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 {
+  
+
+  // Code to seperate nanobots that does not work
   // Vect<2u, double> dir{0.0, 0.0};
 
   // for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)

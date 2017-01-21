@@ -8,7 +8,7 @@ Logic::Logic()
 {
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05},
-				   {-0.0001 * (i % 10), 0.00001 * i}, true, NanoBot::BRUTE));
+				   {-0.001 * (i % 10), 0}, true, NanoBot::BRUTE));
   for (unsigned int i(0); i < 100; i++)
     nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05},
 				   {+0.001, 0}, false, NanoBot::BRUTE));
@@ -35,6 +35,19 @@ void Logic::tick()
       else
 	++it;
     }
+}
+
+void Logic::select(Vect<2u, double> coord, NanoBot::Type type)
+{
+  // TODO: select unit surrounding units. If type != UNKNOWN, select only units of that type.
+  // set start pos to get relative move  
+  selectStart = coord;
+}
+
+void Logic::move(Vect<2u, double> coord)
+{
+  Vect<2u, double> move = coord - selectStart;
+  // TODO: Each unit shouldn't move to the coord, but move rellativelly to it's offset to the original selected point.
 }
 
 std::vector<NanoBot *> const &Logic::getNanoBots() const

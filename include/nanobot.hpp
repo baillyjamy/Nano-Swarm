@@ -13,6 +13,7 @@ public:
     {
       WORKER,
       BRUTE,
+      UNKNOWN,
     };
 private:
   Vect<2u, double> pos;
