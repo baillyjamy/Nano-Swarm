@@ -143,6 +143,11 @@ std::vector<NanoBot *> const &Logic::getNanoBots() const
   return nanoBots;
 }
 
+std::vector<Scrap *> const &Logic::getScraps() const
+{
+  return scraps;
+}
+
 bool Logic::isInRange(NanoBot const &centre, NanoBot const &other, double const ray)
 {
   double dx = centre.getPos().x() - other.getPos().x();

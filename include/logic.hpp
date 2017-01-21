@@ -20,6 +20,7 @@ public:
 
   void tick();
   std::vector<NanoBot *> const &getNanoBots() const;
+  std::vector<Scrap *> const &getScraps() const;
   bool isInRange(NanoBot const &centre, NanoBot const &other, double const ray);
   bool isNear(NanoBot const &centre, NanoBot const &other);
   bool isTouch(NanoBot const &centre, NanoBot const &other);

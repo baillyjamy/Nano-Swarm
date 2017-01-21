@@ -81,7 +81,7 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
   //  speed -= pos * 0.000001;
 }
 
-void NanoBot::action(std::vector<NanoBot *> &nearBots, Logic &logic)
+void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic)
 {
   // returns true if the nanobot died during his action
   switch (type)

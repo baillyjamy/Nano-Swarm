@@ -6,6 +6,7 @@
 
 class Logic;
 class Light;
+class Scrap;
 
 class NanoBot
 {
@@ -39,11 +40,12 @@ public:
   Type getType() const;
   void setCooldown(unsigned int);
   void tick(std::vector<NanoBot *> &nearBots);
-  void action(std::vector<NanoBot *> &nearBots, Logic &);
+  void action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic);
   Light *getLight();
 
 private:
   // returns true if the nanobot died during his action
+  void workerAction(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic);
   void bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic);
   void shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic);
   void bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic);
