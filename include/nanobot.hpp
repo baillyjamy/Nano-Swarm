@@ -13,6 +13,8 @@ public:
     {
       WORKER,
       BRUTE,
+      SHOOTER,
+      BOMBER,
       UNKNOWN,
     };
 private:

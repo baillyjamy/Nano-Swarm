@@ -183,7 +183,7 @@ void Display::postProcess()
 
 void Display::render()
 {
-  lights[0].center += {-0.01, 0.01};
+  //lights[0].center += {-0.01, 0.01};
   //  lights[0].center[0] -= 0.01;
   renderLights();
   displayBots();

@@ -6,11 +6,26 @@ const double Logic::rCollision = 0.01;
 
 Logic::Logic()
 {
+  //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05},
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
 				   {-0.001 * (i % 10), 0}, true, NanoBot::BRUTE));
   for (unsigned int i(0); i < 100; i++)
-    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05},
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
+				   {+0.001, 0}, false, NanoBot::BRUTE));
+  //line fight BRUTE vs BRUTE
+  for (unsigned int i(0); i < 100; i++)
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
+				   {-0.001 * (i % 10), 0}, true, NanoBot::BRUTE));
+  for (unsigned int i(0); i < 100; i++)
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
+				   {+0.001, 0}, false, NanoBot::BRUTE));
+  //line fight SHOOTER vs BRUTE
+  for (unsigned int i(0); i < 100; i++)
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
+				   {+0.001, 0}, true, NanoBot::SHOOTER));
+  for (unsigned int i(0); i < 100; i++)
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
 				   {+0.001, 0}, false, NanoBot::BRUTE));
 }
 
@@ -40,7 +55,7 @@ void Logic::tick()
 void Logic::select(Vect<2u, double> coord, NanoBot::Type type)
 {
   // TODO: select unit surrounding units. If type != UNKNOWN, select only units of that type.
-  // set start pos to get relative move  
+  // set start pos to get relative move
   selectStart = coord;
 }
 
@@ -57,8 +72,8 @@ std::vector<NanoBot *> const &Logic::getNanoBots() const
 
 bool Logic::isInRange(NanoBot const &centre, NanoBot const &other, double const ray)
 {
-  double dx = centre.getPos()[0] - other.getPos()[0];
-  double dy = centre.getPos()[1] - other.getPos()[1];
+  double dx = centre.getPos().x() - other.getPos().x();
+  double dy = centre.getPos().y() - other.getPos().y();
 
   if (dx * dx + dy * dy < ray)
     return (true);
