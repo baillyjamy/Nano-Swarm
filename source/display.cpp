@@ -38,16 +38,16 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
 {
   {
     Bind<RenderContext> bind(worldRenderContext);
-    float const data[12]{0.5f, 0.5f, 1.0f, 0.0f,
-	0.0f, -0.7f, 1.0f, 1.0f,
-	-0.5f, 0.5f, 0.0f, 1.0f};
-
+    // float const data[12]{0.5f, 0.5f, 1.0f, 0.0f,
+    // 	0.0f, -0.7f, 1.0f, 1.0f,
+    // 	-0.5f, 0.5f, 0.0f, 1.0f};
+    
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), data, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    //    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), data, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
   }
   {
     Bind<RenderContext> bind(lightRenderContext);
@@ -134,7 +134,7 @@ void Display::renderLights()
 void Display::displayBots()
 {
   Bind<RenderContext> bind(worldRenderContext);
-  float *data = new float[logic.getNanoBots().size() * 4 * 4 * 3];
+  float *data = new float[logic.getNanoBots().size() * 4 * 5 * 3];
   unsigned int i(0);
 
   for (unsigned int j(0); j < logic.getNanoBots().size(); j++)
@@ -145,37 +145,62 @@ void Display::displayBots()
       data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[1];
       data[i++] = 1.0f;
       data[i++] = 1.0f;
+      data[i++] = 1.0f;
       data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] - d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] - d[1];
       data[i++] = 0.0f;
+      data[i++] = 1.0f;
       data[i++] = 1.0f;
       data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] - d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] - d[1];
       data[i++] = 1.0f;
       data[i++] = 0.0f;
+      data[i++] = 1.0f;
     }
   glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
   glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
   delete [] data;
   setOffsetAndScale(worldRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
-  glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  // glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+  // glClear(GL_COLOR_BUFFER_BIT);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-  glDrawArrays(GL_TRIANGLES, 0, i / 4);
+  glDrawArrays(GL_TRIANGLES, 0, i / 5);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glDisable(GL_BLEND);
 }
 
 void Display::displayMouseSelection()
 {
+  Bind<RenderContext> bind(worldRenderContext);
+  glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
+  glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
   if (!Callback::leftPressed)
     return;
+  float data[4 * 5 * 4];
+  unsigned int i(0);
 
-  glClear(GL_COLOR_BUFFER_BIT);
-  glLineWidth(30);
-  glFlush();
+  for (unsigned int j(0); j < 4; j++)
+    {
+      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.01);
+
+      data[i++] = (j == 1 || j == 2) ? Callback::dragOrigin[0] : Callback::pos[0];
+      data[i++] = (j <= 1) ? Callback::dragOrigin[1] : Callback::pos[1];
+      std::cout << Callback::dragOrigin[0] << std::endl;
+      data[i++] = 1.0f;
+      data[i++] = 1.0f;
+      data[i++] = 1.0f;
+    }
+  glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
+  glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
+  setOffsetAndScale(worldRenderContext.program);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+  glDrawArrays(GL_LINE_LOOP, 0, 4);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glDisable(GL_BLEND);
 }
 
 void Display::postProcess()
@@ -197,9 +222,9 @@ void Display::render()
   // lights[0].center += {-0.01, 0.01};
   //  lights[0].center[0] -= 0.01;
   renderLights();
+  displayMouseSelection();
   displayBots();
   // TODO : good idea ?
-  displayMouseSelection();
   postProcess();
   fpsCounter.tick();
 }
