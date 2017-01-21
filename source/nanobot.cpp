@@ -31,7 +31,7 @@ bool NanoBot::update()
   light->color = !ally ? Vect<4u, float>{1.0, 0.5, 0.5, 1.0}
   : (selected ? Vect<4u, float>{1.0, 1.0, 0.5, 1.0}
   : Vect<4u, float>{0.5, 1.0, 0.5, 1.0});
-  speed *= 0.96;
+  speed *= 0.9;
   return !(cooldown -= !!cooldown);
 }
 
@@ -113,11 +113,15 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 
   	  coef = coef > 0.01 ? 1 / coef : coef;
   	  //	  if (coef < 0.0001)
-  	  dir -= posDelta * 0.01;
+  	  dir += speedDelta * 0.005;
+	  dir += posDelta * 0.0001;
   	}
     }
-  if (dir.length() > 0.0001 * 0.0001)
-    dir = dir.normalized() * 0.0001;
+
+  constexpr double const maxAccel = 0.002;
+
+  if (dir.length() > maxAccel * maxAccel)
+    dir = dir.normalized() * maxAccel;
   speed += dir;
 
    speed -= pos * 0.000001;
@@ -155,7 +159,6 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
       if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BRUTE::attackRange)
 	{
 	  cooldown = BRUTE::cooldown;
-	  Type ennemy = (*it)->getType();
 	  logic.kill(*it);
 	}
     }
