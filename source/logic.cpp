@@ -102,14 +102,15 @@ void Logic::tick()
     }
 }
 
-void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
+void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end, Vect<4u, bool> keyPressed)
 {
   selectedBots.clear();
-  std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end](NanoBot *bot){
+  std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end, keyPressed](NanoBot *bot){
       if (bot->isAlly())
 	{
 	  if (bot->getPos().x() >= start.x() && bot->getPos().x() <= end.x() &&
-	      bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y())
+	      bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y() &&
+	      (keyPressed == Vect<4u, bool>(false, false, false, false) || keyPressed[bot->getType()]))
 	    {
 	      bot->setSelection(true);
 	      selectedBots.push_back(bot);
@@ -119,9 +120,25 @@ void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 	    {
 	      bot->setSelection(false);
 	    }
-	  return;
 	}
     });
+}
+
+void Logic::refreshSelection(Vect<4u, bool> keyPressed)
+{
+  std::vector<NanoBot *>::iterator it = selectedBots.begin();
+  while (it != selectedBots.end())
+    {
+      if (keyPressed != Vect<4u, bool>(false, false, false, false) && !keyPressed[(*it)->getType()])
+	{
+	  (*it)->setSelection(false);
+	  it = selectedBots.erase(it);
+	}
+      else
+	{
+	  it++;
+	}
+    }
 }
 
 void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)

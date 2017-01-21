@@ -14,13 +14,16 @@ namespace Callback
 
   void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
   Vect<2u, double> screenToGame(Vect<2u, double> pos);
+  void selectBots();
 
   // mouse data
   extern Vect<2u, double> pos;
-
-  // original click
-  extern bool leftPressed;
   extern Vect<2u, double> dragOrigin;
+  extern bool leftPressed;
+  extern bool rightPressed;
+
+  // key data
+  extern Vect<4u, bool> keyPressed;
 };
 
 #endif /* !INPUT_HPP_ */

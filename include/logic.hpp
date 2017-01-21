@@ -23,7 +23,8 @@ public:
   std::vector<Scrap *> const &getScraps() const;
   void kill(NanoBot *);
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
-  void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
+  void selectRect(Vect<2u, double> pos, Vect<2u, double> size, Vect<4u, bool> keyPressed);
+  void refreshSelection(Vect<4u, bool> keyPressed);
   void destroyScrap(Scrap *);
   void moveSelection(Vect<2u, double> coord);
   void createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type);
@@ -49,8 +50,8 @@ public:
     return isInRange(centre, other, rCollision);
   }
 
-  static constexpr double rNear = 0.05;
-  static constexpr double rCollision = 0.01;
+  static constexpr double const rNear = 0.05;
+  static constexpr double const rCollision = 0.01;
 
 private:
   Logic();
