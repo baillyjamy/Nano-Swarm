@@ -91,7 +91,6 @@ void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 			  bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y())
 			{
 			  bot->setSelection(true);
-			  std::cout << "bot : " << " select" << std::endl;
 			}
 		      else
 			{
