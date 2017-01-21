@@ -10,36 +10,36 @@ Logic::Logic()
   //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
-			  {-0.00 * (i % 10), 0},
-			  true,
-			  NanoBot::BRUTE);
+	      {-0.00 * (i % 10), 0},
+	      true,
+	      NanoBot::BRUTE);
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
-			  {+0.001, 0},
-			  false,
-			  NanoBot::BOMBER);
+	      {+0.001, 0},
+	      false,
+	      NanoBot::BRUTE);
   //line fight BRUTE vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
-			  {-0.001 * (i % 10), 0},
-			  true,
-			  NanoBot::BRUTE);
+	      {-0.001 * (i % 10), 0},
+	      true,
+	      NanoBot::BRUTE);
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
-			  {+0.001, 0},
-			  false,
-			  NanoBot::BRUTE);
+	      {+0.001, 0},
+	      false,
+	      NanoBot::BRUTE);
   //line fight SHOOTER vs BRUTE
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
-			  {+0.001, 0},
-			  true,
-			  NanoBot::SHOOTER);
+	      {+0.001, 0},
+	      true,
+	      NanoBot::SHOOTER);
   for (unsigned int i(0); i < 100; i++)
     createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
-			  {+0.001, 0},
-			  false,
-			  NanoBot::BRUTE);
+	      {+0.001, 0},
+	      false,
+	      NanoBot::BRUTE);
 }
 
 void Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type)
@@ -63,14 +63,19 @@ void Logic::tick()
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, n, &nearBots](NanoBot *m)
-
 		    {
 		      if (n != m && isNear(*n, *m))
 			nearBots.push_back(m);
 		    });
       n->tick(nearBots);
+      std::vector<Scrap *> nearScraps;
+      std::for_each(scraps.begin(), scraps.end(), [this, n, &nearScraps](Scrap *o)
+		    {
+		      if (isNear(*o, *n))
+			nearScraps.push_back(o);
+		    });
       if (n->update())
-	n->action(nearBots, *this);
+	n->action(nearBots, nearScraps, *this);
     });
   std::vector<NanoBot *>::iterator it(nanoBots.begin());
   while (it != nanoBots.end())
@@ -150,25 +155,9 @@ std::vector<NanoBot *> const &Logic::getNanoBots() const
   return nanoBots;
 }
 
-bool Logic::isInRange(NanoBot const &centre, NanoBot const &other, double const ray)
+std::vector<Scrap *> const &Logic::getScraps() const
 {
-  double dx = centre.getPos().x() - other.getPos().x();
-  double dy = centre.getPos().y() - other.getPos().y();
-
-  if (dx * dx + dy * dy < ray)
-    return (true);
-  else
-    return (false);
-}
-
-bool Logic::isNear(NanoBot const &centre, NanoBot const &other)
-{
-  return (isInRange(centre, other, rNear));
-}
-
-bool Logic::isTouch(NanoBot const &centre, NanoBot const &other)
-{
-  return (isInRange(centre, other, rCollision));
+  return scraps;
 }
 
 void Logic::kill(NanoBot *n)

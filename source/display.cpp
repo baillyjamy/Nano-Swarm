@@ -37,14 +37,11 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
 {
   {
     Bind<RenderContext> bind(worldRenderContext);
-    // float const data[12]{0.5f, 0.5f, 1.0f, 0.0f,
-    // 	0.0f, -0.7f, 1.0f, 1.0f,
-    // 	-0.5f, 0.5f, 0.0f, 1.0f};
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
-    //    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 0, 0, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), nullptr);
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
   }
@@ -69,8 +66,6 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
     glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(float), nullptr);
   }
-  // lights.push_back({{0.5f, 0.0f}, {1.0f, 0.5f, 1.0f, 1.0f}, 1.5f});
-  // lights.push_back({{-0.5f, 0.0f}, {0.0f, 1.0f, 0.5f, 1.0f}, 0.5f});
 }
 
 Display::~Display()
@@ -120,7 +115,7 @@ void Display::renderLights()
   delete [] data;
   setOffsetAndScale(lightRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
-  glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+  glClearColor(0.1f, 0.1f, 0.2f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
@@ -160,8 +155,8 @@ void Display::displayBots()
   delete [] data;
   setOffsetAndScale(worldRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
-  // glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-  // glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glDrawArrays(GL_TRIANGLES, 0, i / 5);
@@ -172,11 +167,7 @@ void Display::displayBots()
 void Display::displayMouseSelection()
 {
   Bind<RenderContext> bind(worldRenderContext);
-  glBindFramebuffer(GL_FRAMEBUFFER, worldRenderTexture.framebuffer);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
-  glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
   if (!Callback::leftPressed)
     return;
   float data[4 * 5 * 4];
