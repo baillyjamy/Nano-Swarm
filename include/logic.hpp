@@ -13,6 +13,7 @@ private:
   std::vector<NanoBot *> toDelete;
   std::vector<Scrap *> scraps;
   std::vector<Scrap *> scrapsToDelete;
+  std::vector<Light *> explosions;
   Vect<2u, double> selectStart;
   std::vector<Light *> lights;
 public:
@@ -28,6 +29,8 @@ public:
   void destroyScrap(Scrap *);
   void moveSelection(Vect<2u, double> coord);
   void createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type);
+  void addExplosion(Light *);
+  void updateExplosions();
   void addLight(Light *);
   void removeLight(Light *);
   std::vector<Light *> const &getLights() const;

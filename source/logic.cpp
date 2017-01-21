@@ -82,6 +82,7 @@ void Logic::tick()
     {
       if (std::find(toDelete.begin(), toDelete.end(), *it) != toDelete.end())
 	{
+	  addExplosion(new Light{(*it)->getPos(), {5.0, 5.0, 5.0, 1.0}, 0.1});
 	  scraps.push_back(new Scrap((*it)->getPos(), (*it)->getSpeed(), (*it)->getType()));
 	  it = nanoBots.erase(it);
 	}
@@ -105,6 +106,30 @@ void Logic::tick()
       else
 	++it_r;
     }
+  updateExplosions();
+}
+
+void Logic::updateExplosions()
+{
+  std::vector<Light *>::iterator it(explosions.begin());
+  while (it != explosions.end())
+    {
+      (*it)->color[3] -= 0.2;
+      (*it)->radius += 0.05;
+      if ((*it)->color[3] <= 0)
+	{
+	  removeLight(*it);
+	  it = explosions.erase(it);
+	}
+      else
+	++it;
+    }
+}
+
+void Logic::addExplosion(Light *l)
+{
+  explosions.push_back(l);
+  lights.push_back(l);
 }
 
 void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end, Vect<4u, bool> keyPressed)
