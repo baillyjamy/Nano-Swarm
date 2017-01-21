@@ -25,7 +25,7 @@ int main(void)
 {
   try
     {
-      Vect<2u, unsigned int> dim(1920, 1080); 
+      Vect<2u, unsigned int> dim(1920, 1080);
       GLFWwindow *window = init(dim);
       // should probably be moved to constructor...
       MainLoop mainLoop(dim);

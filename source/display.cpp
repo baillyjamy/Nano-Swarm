@@ -6,7 +6,6 @@
 #include <cmath>
 #include "display.hpp"
 #include "my_opengl.hpp"
-#include "input_system.hpp"
 #include "bind.hpp"
 #include "math.hpp"
 #include "logic.hpp"
@@ -16,10 +15,9 @@ static inline RenderContext contextFromFiles(std::string name)
   std::stringstream vert;
   std::stringstream frag;
 
-  vert << std::ifstream("shaders/" + name + ".vert");
-  frag << std::ifstream("shaders/" + name + ".frag");
-  return {my_opengl::createVao(),
-      my_opengl::createProgram<2>({GL_VERTEX_SHADER, GL_FRAGMENT_SHADER},
+  vert << std::ifstream("shaders/" + name + ".vert").rdbuf();
+  frag << std::ifstream("shaders/" + name + ".frag").rdbuf();
+  return {Vao(), my_opengl::createProgram<2>({GL_VERTEX_SHADER, GL_FRAGMENT_SHADER},
 	{vert.str(), frag.str()})};
 }
 
@@ -28,9 +26,9 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
   worldRenderContext(contextFromFiles("basic")),
   lightRenderContext(contextFromFiles("color")),
   postProcessContext(contextFromFiles("multiply")),
-  fixtureBuffer(my_opengl::createBuffer()),
-  lightBuffer(my_opengl::createBuffer()),
-  cornerBuffer(my_opengl::createBuffer()),
+  fixtureBuffer(),
+  lightBuffer(),
+  cornerBuffer(),
   lightRenderTexture(size),
   worldRenderTexture(size),
   lights(),
