@@ -104,20 +104,11 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() != ally)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BRUTE::attackRange)
 	{
-	  if ((pos - (*it)->pos).length() < BRUTE::attackRange)
-	    {
-	      std::cout << "ACTION!!" << std::endl;
-	      cooldown = BRUTE::cooldown;
-	      Type ennemy = (*it)->getType();
-	      logic.kill(*it);
-	      if (ennemy == BRUTE)
-		{
-		  logic.kill(this);
-		  return;
-		}
-	    }
+	  cooldown = BRUTE::cooldown;
+	  Type ennemy = (*it)->getType();
+	  logic.kill(*it);
 	}
     }
 }
@@ -126,14 +117,10 @@ void NanoBot::shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() != ally)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < SHOOTER::attackRange)
 	{
-	  if ((pos - (*it)->pos).length() < SHOOTER::attackRange)
-	    {
-	      std::cout << "SHOOT!!" << std::endl;
-	      cooldown = SHOOTER::cooldown;
-	      logic.kill(*it);
-	    }
+	  cooldown = SHOOTER::cooldown;
+	  logic.kill(*it);
 	}
     }
 }
@@ -144,8 +131,6 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
     {
       if ((pos - (*it)->pos).length() < BOMBER::attackRange)
 	{
-	  std::cout << "BOMBER!!" << std::endl;
-
 	  // kill every nanobot in range
 	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
 	    {

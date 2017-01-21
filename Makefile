@@ -6,7 +6,7 @@ CFLAGS +=	-W -Wextra -Wall
 CFLAGS +=	-I./
 
 CPPFLAGS +=	-W -Wextra -Wall
-CPPFLAGS +=	-I./include -I. -std=c++11 -g3
+CPPFLAGS +=	-I./include -I. -std=c++11 -O3
 
 LDFLAGS = `pkg-config --static --libs glfw3`
 

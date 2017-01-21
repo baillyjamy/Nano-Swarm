@@ -66,8 +66,6 @@ Display::Display(Vect<2u, unsigned int> size, Logic &logic)
     glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(float), nullptr);
   }
-  // lights.push_back({{0.5f, 0.0f}, {1.0f, 0.5f, 1.0f, 1.0f}, 1.5f});
-  // lights.push_back({{-0.5f, 0.0f}, {0.0f, 1.0f, 0.5f, 1.0f}, 0.5f});
 }
 
 Display::~Display()
