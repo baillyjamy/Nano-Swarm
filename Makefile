@@ -20,6 +20,7 @@ SRCS_CPP = 	source/main.cpp \
 		source/fps_counter.cpp \
 		source/input.cpp \
 		source/nanobot.cpp \
+		source/remain.cpp \
 		source/logic.cpp \
 		source/main_loop.cpp \
 
