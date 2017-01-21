@@ -24,9 +24,9 @@ private:
   bool ally;
   Type type;
   unsigned int cooldown;
-
   bool selected;
   Light *light;
+  Vect<2u, double> target;
 
 public:
   NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type, Light *light);
@@ -41,6 +41,7 @@ public:
   void tick(std::vector<NanoBot *> &nearBots);
   void action(std::vector<NanoBot *> &nearBots, Logic &);
   Light *getLight();
+  void move(Vect<2u, double> target);
 
 private:
   // returns true if the nanobot died during his action

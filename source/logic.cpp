@@ -108,7 +108,7 @@ void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 	    {
 	      bot->setSelection(true);
 	      selectedBots.push_back(bot);
-	      std::cout << "selected" << std::endl;
+	      // std::cout << "selected" << std::endl;
 	    }
 	  else
 	    {
@@ -128,14 +128,21 @@ void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
 
 void Logic::moveSelection(Vect<2u, double> coord)
 {
-  Vect<2u, double> move = coord - selectStart;
+  if (selectedBots.empty())
+    return;
 
   Vect<2u, double> averagePos(0, 0);
 
-  // std::for_each(selectedBots.begin(), selectedBots.end(), [&averagePos](NanoBot *bot) {
-  //     averagePos += bot->getPos();
-  //   });
-  // TODO: Each unit shouldn't move to the coord, but move rellativelly to it's offset to the original selected point.
+  std::for_each(selectedBots.begin(), selectedBots.end(), [&averagePos](NanoBot *bot) {
+      averagePos += bot->getPos();
+    });
+  averagePos /= selectedBots.size();
+
+  std::for_each(selectedBots.begin(), selectedBots.end(), [coord, &averagePos](NanoBot *bot) {
+      Vect<2u, double> offset(bot->getPos() - averagePos);
+      bot->move(offset + coord);
+      // bot->move(coord);
+    });
 }
 
 std::vector<NanoBot *> const &Logic::getNanoBots() const

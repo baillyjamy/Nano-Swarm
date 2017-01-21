@@ -4,18 +4,34 @@
 #include "light.hpp"
 
 NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type, Light *light)
-  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light)
+  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light), target(pos)
 {
 }
 
 bool NanoBot::update()
 {
+  constexpr double const maxAccel = 0.001;
+
+  Vect<2u, double> delta(target - pos);
+
+  if (delta.scalar(delta) > maxAccel)
+    {
+      if (delta.scalar(delta) > maxAccel * maxAccel)
+	{
+	  delta = delta.normalized() * maxAccel;
+	}
+      speed += delta;
+    }
+
+
+  // speed += pos * 0.005;
+
   pos += speed;
   light->center = pos;
   light->color = !ally ? Vect<4u, float>{1.0, 0.5, 0.5, 1.0}
   : (selected ? Vect<4u, float>{1.0, 1.0, 0.5, 1.0}
   : Vect<4u, float>{0.5, 1.0, 0.5, 1.0});
-  speed *= 0.999;
+  speed *= 0.96;
   return !(cooldown -= !!cooldown);
 }
 
@@ -27,6 +43,11 @@ Vect<2u, double> NanoBot::getPos() const
 Vect<2u, double> NanoBot::getSpeed() const
 {
   return speed;
+}
+
+void NanoBot::move(Vect<2u, double> target)
+{
+  this->target = target;
 }
 
 bool NanoBot::isSelected() const
@@ -79,6 +100,27 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
   // speed += dir;
 
   //  speed -= pos * 0.000001;
+
+  Vect<2u, double> dir{0.0, 0.0};
+
+  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
+    {
+      if ((*it)->isAlly() == ally && (*it)->getType() == type)
+  	{
+  	  Vect<2u, double> posDelta(pos - (*it)->pos);
+  	  Vect<2u, double> speedDelta(speed - (*it)->speed);
+  	  double coef = posDelta.scalar(posDelta) - 0.01;
+
+  	  coef = coef > 0.01 ? 1 / coef : coef;
+  	  //	  if (coef < 0.0001)
+  	  dir -= posDelta * 0.01;
+  	}
+    }
+  if (dir.length() > 0.0001 * 0.0001)
+    dir = dir.normalized() * 0.0001;
+  speed += dir;
+
+   speed -= pos * 0.000001;
 }
 
 void NanoBot::action(std::vector<NanoBot *> &nearBots, Logic &logic)
@@ -108,7 +150,7 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	{
 	  if ((pos - (*it)->pos).length() < BRUTE::attackRange)
 	    {
-	      std::cout << "ACTION!!" << std::endl;
+	      // std::cout << "ACTION!!" << std::endl;
 	      cooldown = BRUTE::cooldown;
 	      Type ennemy = (*it)->getType();
 	      logic.kill(*it);
@@ -130,7 +172,7 @@ void NanoBot::shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	{
 	  if ((pos - (*it)->pos).length() < SHOOTER::attackRange)
 	    {
-	      std::cout << "SHOOT!!" << std::endl;
+	      // std::cout << "SHOOT!!" << std::endl;
 	      cooldown = SHOOTER::cooldown;
 	      logic.kill(*it);
 	    }
@@ -144,7 +186,7 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
     {
       if ((pos - (*it)->pos).length() < BOMBER::attackRange)
 	{
-	  std::cout << "BOMBER!!" << std::endl;
+	  // std::cout << "BOMBER!!" << std::endl;
 
 	  // kill every nanobot in range
 	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
