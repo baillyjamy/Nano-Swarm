@@ -83,22 +83,24 @@ void Logic::tick()
 
 void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end)
 {
-  std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end](NanoBot *bot)
-		{
-		  if (bot->isAlly())
-		    {
-		      if (bot->getPos().x() >= start.x() && bot->getPos().x() <= end.x() &&
-			  bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y())
-			{
-			  bot->setSelection(true);
-			}
-		      else
-			{
-			  bot->setSelection(false);
-			}
-		      return;
-		    }
-		});
+  selectedBots.clear();
+  std::for_each(nanoBots.begin(), nanoBots.end(), [this, start, end](NanoBot *bot){
+      if (bot->isAlly())
+	{
+	  if (bot->getPos().x() >= start.x() && bot->getPos().x() <= end.x() &&
+	      bot->getPos().y() >= start.y() && bot->getPos().y() <= end.y())
+	    {
+	      bot->setSelection(true);
+	      selectedBots.push_back(bot);
+	      std::cout << "selected" << std::endl;
+	    }
+	  else
+	    {
+	      bot->setSelection(false);
+	    }
+	  return;
+	}
+    });
 }
 
 void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
@@ -108,7 +110,7 @@ void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
   selectStart = coord;
 }
 
-void Logic::move(Vect<2u, double> coord)
+void Logic::moveSelection(Vect<2u, double> coord)
 {
   Vect<2u, double> move = coord - selectStart;
   // TODO: Each unit shouldn't move to the coord, but move rellativelly to it's offset to the original selected point.
@@ -143,8 +145,11 @@ bool Logic::isTouch(NanoBot const &centre, NanoBot const &other)
 void Logic::kill(NanoBot *n)
 {
   toDelete.push_back(n);
-  // nanoBots.erase(std::find(nanoBots.begin(), nanoBots.end(), n));
-  // delete n;
+
+  // remove if selected
+  std::vector<NanoBot *>::iterator it = std::find(selectedBots.begin(), selectedBots.end(), n);
+  if (it != selectedBots.end())
+    selectedBots.erase(it);
 }
 
 void Logic::destroyScrap(Scrap *r)

@@ -16,11 +16,6 @@ void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 {
   (void)window;
   pos = screenToGame({x, y});
-
-  if (leftPressed)
-    {
-      std::cout << "dragging: x " << pos.x() << ", y " << pos.y() << std::endl;
-    }
 }
 
 void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
@@ -32,22 +27,19 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
       if (action == GLFW_PRESS)
 	{
 	  dragOrigin = pos;
-	  std::cout << "click at: x " << pos.x() << ", y " << pos.y() << std::endl;
 	  leftPressed = true;
 	}
       else
 	{
 	  Vect<2u, double> start(std::min(pos.x(), dragOrigin.x()), std::min(pos.y(), dragOrigin.y()));
 	  Vect<2u, double> end(std::max(pos.x(), dragOrigin.x()), std::max(pos.y(), dragOrigin.y()));
-
 	  Logic::getInstance().selectRect(start, end);
-
-	  std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
 	  leftPressed = false;
 	}
     }
   else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
     {
+
       std::cout << "Right at: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
 }
@@ -64,7 +56,6 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
       glfwSetWindowShouldClose(window, true);
       break;
     }
-  std::cout << "key : " << key << std::endl;
 }
 
 Vect<2u, double> Callback::screenToGame(Vect<2u, double> pos)

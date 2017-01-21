@@ -9,6 +9,7 @@ class Logic
 {
 private:
   std::vector<NanoBot *> nanoBots;
+  std::vector<NanoBot *> selectedBots;
   std::vector<NanoBot *> toDelete;
   std::vector<Scrap *> scraps;
   std::vector<Scrap *> scrapsToDelete;
@@ -25,7 +26,7 @@ public:
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size);
   void destroyScrap(Scrap *);
-  void move(Vect<2u, double> coord);
+  void moveSelection(Vect<2u, double> coord);
 
   static constexpr double rNear = 0.05;
   static constexpr double rCollision = 0.01;
