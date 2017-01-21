@@ -11,6 +11,9 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
   (void)scancode;
   (void)action;
   (void)mode;
+  if (key == GLFW_KEY_ESCAPE) {
+    glfwSetWindowShouldClose(window, true);
+  }
   std::cout << "key : " << key << std::endl;
 }
 
