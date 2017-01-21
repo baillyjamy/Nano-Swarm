@@ -7,9 +7,7 @@ const double Logic::rCollision = 0.01;
 Logic::Logic()
 {
   for (unsigned int i(0); i < 100; i++)
-    {
-      nanoBots.push_back(new NanoBot({(i % 10) * 0.02, (i / 10) * 0.02}, {0.01, 0.0001 * i}));
-    }
+    nanoBots.push_back(new NanoBot({(i % 10) * 0.02, (i / 10) * 0.02}, {-0.0001 * (i % 10), 0.00001 * i}));
 }
 
 void Logic::tick()

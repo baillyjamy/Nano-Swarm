@@ -139,18 +139,19 @@ void Display::displayBots()
   for (unsigned int j(0); j < logic.getNanoBots().size(); j++)
     {
       Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.01);
+
       data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[1];
       data[i++] = 1.0f;
       data[i++] = 1.0f;
       data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] - d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] - d[1];
-      data[i++] = 1.0f;
+      data[i++] = 0.0f;
       data[i++] = 1.0f;
       data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] - d[0];
       data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] - d[1];
       data[i++] = 1.0f;
-      data[i++] = 1.0f;
+      data[i++] = 0.0f;
     }
   glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
   glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
