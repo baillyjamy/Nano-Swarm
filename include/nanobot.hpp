@@ -11,6 +11,7 @@ private:
 public:
   NanoBot(Vect<2u, double> const &, Vect<2u, double> const &);
   void update();
+  Vect<2u, double> getPos();
 };
 
 #endif

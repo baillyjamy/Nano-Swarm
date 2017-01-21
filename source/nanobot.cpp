@@ -9,3 +9,8 @@ void NanoBot::update()
 {
   pos += speed;
 }
+
+Vect<2u, double> NanoBot::getPos()
+{
+  return pos;
+}
