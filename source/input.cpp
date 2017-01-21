@@ -69,5 +69,5 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
 
 Vect<2u, double> Callback::screenToGame(Vect<2u, double> pos)
 {
-  return pos * 2.0 / Vect<2u, double>(1920, -1080) + Vect<2u, double>(-1.0, 1.0);
+  return (pos - Vect<2u, double>(1920 - 1080, 0) * 0.5) / Vect<2u, double>(1080 * 0.5, -1080 * 0.5) + Vect<2u, double>(-1.0, 1.0);
 }
