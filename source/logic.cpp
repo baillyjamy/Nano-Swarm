@@ -68,15 +68,14 @@ void Logic::tick()
 	++it;
     }
 
-  std::for_each(remains.begin(), remains.end(), [this](Remain *r){
-      if (r->update())
-	r->action(*this);
+  std::for_each(scraps.begin(), scraps.end(), [this](Scrap *r){
+      r->update();
     });
-  std::vector<Remain *>::iterator it_r(remains.begin());
-  while (it_r != remains.end())
+  std::vector<Scrap *>::iterator it_r(scraps.begin());
+  while (it_r != scraps.end())
     {
-      if (std::find(remainsToDelete.begin(), remainsToDelete.end(), *it_r) != remainsToDelete.end())
-	it_r = remains.erase(it_r);
+      if (std::find(scrapsToDelete.begin(), scrapsToDelete.end(), *it_r) != scrapsToDelete.end())
+	it_r = scraps.erase(it_r);
       else
 	++it;
     }
@@ -147,7 +146,7 @@ void Logic::kill(NanoBot *n)
   // delete n;
 }
 
-void Logic::destroyRemain(Remain *r)
+void Logic::destroyScrap(Scrap *r)
 {
-  remainsToDelete.push_back(r);
+  scrapsToDelete.push_back(r);
 }
