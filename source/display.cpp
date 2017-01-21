@@ -188,7 +188,6 @@ void Display::displayMouseSelection()
 
       data[i++] = (j == 1 || j == 2) ? Callback::dragOrigin[0] : Callback::pos[0];
       data[i++] = (j <= 1) ? Callback::dragOrigin[1] : Callback::pos[1];
-      std::cout << Callback::dragOrigin[0] << std::endl;
       data[i++] = 1.0f;
       data[i++] = 1.0f;
       data[i++] = 1.0f;
