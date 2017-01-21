@@ -1,10 +1,16 @@
 #ifndef LOGIC_HPP_
 # define LOGIC_HPP_
 
+# include <vector>
+# include "nanobot.hpp"
+
 class Logic
 {
+private:
+  std::vector<NanoBot *> nanobots;
 public:
-  void tick(){};
+  Logic();
+  void tick();
 };
 
 #endif

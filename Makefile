@@ -19,6 +19,8 @@ SRCS_CPP = 	source/main.cpp \
 		source/display.cpp \
 		source/fps_counter.cpp \
 		source/input.cpp \
+		source/nanobot.cpp \
+		source/logic.cpp \
 
 OBJS = 	$(SRCS_C:.c=.o) $(SRCS_CPP:.cpp=.o)
 
