@@ -19,6 +19,7 @@ private:
   Vect<2u, float> scale;
   RenderContext const worldRenderContext;
   RenderContext const lightRenderContext;
+  RenderContext const frontRenderContext;
   RenderContext const postProcessContext;
   glBuffer fixtureBuffer;
   glBuffer lightBuffer;
