@@ -139,10 +139,7 @@ bool Logic::isInRange(NanoBot const &centre, NanoBot const &other, double const 
   double dx = centre.getPos().x() - other.getPos().x();
   double dy = centre.getPos().y() - other.getPos().y();
 
-  if (dx * dx + dy * dy < ray)
-    return (true);
-  else
-    return (false);
+  return dx * dx + dy * dy < ray;
 }
 
 bool Logic::isNear(NanoBot const &centre, NanoBot const &other)
