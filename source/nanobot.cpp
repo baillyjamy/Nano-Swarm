@@ -3,7 +3,7 @@
 #include "logic.hpp"
 
 NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type)
-  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0)
+  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), isSelected(false)
 {
 }
 
@@ -41,7 +41,6 @@ void NanoBot::setCooldown(unsigned int delay)
 
 void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 {
-
   // Code to seperate nanobots that does not work
   // Vect<2u, double> dir{0.0, 0.0};
 

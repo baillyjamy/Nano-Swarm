@@ -9,6 +9,7 @@
 #include "bind.hpp"
 #include "math.hpp"
 #include "logic.hpp"
+#include "input.hpp"
 
 static inline RenderContext contextFromFiles(std::string name)
 {
@@ -167,6 +168,16 @@ void Display::displayBots()
   glDisable(GL_BLEND);
 }
 
+void Display::displayMouseSelection()
+{
+  if (!Callback::leftPressed)
+    return;
+
+  glClear(GL_COLOR_BUFFER_BIT);
+  glLineWidth(30);
+  glFlush();
+}
+
 void Display::postProcess()
 {
   Bind<RenderContext> bind(postProcessContext);
@@ -183,10 +194,12 @@ void Display::postProcess()
 
 void Display::render()
 {
-  //lights[0].center += {-0.01, 0.01};
+  // lights[0].center += {-0.01, 0.01};
   //  lights[0].center[0] -= 0.01;
   renderLights();
   displayBots();
+  // TODO : good idea ?
+  displayMouseSelection();
   postProcess();
   fpsCounter.tick();
 }

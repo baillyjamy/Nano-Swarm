@@ -1,8 +1,8 @@
 #include <iostream>
 #include "input.hpp"
 
-double Callback::x = 0;
-double Callback::y = 0;
+Vect<2u, double> Callback::pos(0, 0);
+Vect<2u, double> Callback::dragOrigin(0, 0);
 bool Callback::leftPressed = false;
 
 void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
@@ -11,21 +11,23 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
   (void)scancode;
   (void)action;
   (void)mode;
-  if (key == GLFW_KEY_ESCAPE) {
-    glfwSetWindowShouldClose(window, true);
-  }
+  switch (key)
+    {
+    case GLFW_KEY_ESCAPE: // Escape close window
+      glfwSetWindowShouldClose(window, true);
+      break;
+    }
   std::cout << "key : " << key << std::endl;
 }
 
 void Callback::mouseCallback(GLFWwindow *window, double x, double y)
 {
   (void)window;
-  Callback::x = x;
-  Callback::y = y;
+  pos = {x, y};
 
   if (leftPressed)
     {
-      std::cout << "dragging at: x " << Callback::x << ", y " << Callback::y << std::endl;
+      std::cout << "dragging: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
 }
 
@@ -37,18 +39,22 @@ void Callback::mouseButtonCallback(GLFWwindow *window, int button, int action, i
     {
       if (action == GLFW_PRESS)
 	{
-	  std::cout << "Left press at: x " << x << ", y " << y << std::endl;
+	  dragOrigin = pos;
+	  std::cout << "click at: x " << pos.x() << ", y " << pos.y() << std::endl;
 	  leftPressed = true;
 	}
       else
 	{
-	  std::cout << "Left release at: x " << x << ", y " << y << std::endl;
+	  if (dragOrigin == pos)
+	    std::cout << "click release at: x " << pos.x() << ", y " << pos.y() << std::endl;
+	  else
+	    std::cout << "drag release at: x " << pos.x() << ", y " << pos.y() << std::endl;
 	  leftPressed = false;
 	}
     }
   else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
     {
-      std::cout << "Right at: x " << x << ", y " << y << std::endl;
+      std::cout << "Right at: x " << pos.x() << ", y " << pos.y() << std::endl;
     }
 }
 

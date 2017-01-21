@@ -21,6 +21,7 @@ SRCS_CPP = 	source/main.cpp \
 		source/input.cpp \
 		source/nanobot.cpp \
 		source/logic.cpp \
+		source/main_loop.cpp \
 
 OBJS = 	$(SRCS_C:.c=.o) $(SRCS_CPP:.cpp=.o)
 
