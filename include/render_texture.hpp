@@ -11,8 +11,8 @@ public:
   Texture texture;
 
   RenderTexture(Vect<2u, unsigned int> const size)
-    : framebuffer(my_opengl::createFramebuffer()),
-      texture(my_opengl::createTexture())
+    : framebuffer(),
+      texture()
   {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glBindTexture(GL_TEXTURE_2D, texture);

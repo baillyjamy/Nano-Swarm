@@ -45,10 +45,10 @@ void my_opengl::programError(GLuint const program)
 
 Shader my_opengl::createShader(GLenum const shadertype, GLchar const *src)
 {
-  Shader shader(glCreateShader(shadertype));
+  Shader shader(shadertype);
   GLint status(0);
 
-  glShaderSource(shader, 1, &src, (const GLint  *)0);
+  glShaderSource(shader, 1, &src, (const GLint *)0);
   glCompileShader(shader);
 
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
@@ -57,34 +57,198 @@ Shader my_opengl::createShader(GLenum const shadertype, GLchar const *src)
   return (shader);
 }
 
-Vao my_opengl::createVao()
+Shader::Shader(GLuint shadertype)
+  : shader(glCreateShader(shadertype)), count(new unsigned int(1u))
 {
-  GLuint vao;
+}
 
+Shader::~Shader()
+{
+  if (!--*count)
+    {
+      glDeleteShader(shader);
+      delete count;
+    }
+}
+
+Shader::Shader(Shader const &s)
+  : shader(s.shader), count(s.count)
+{
+  ++*count;
+}
+
+Shader &Shader::operator=(Shader s)
+{
+  std::swap(s.count, count);
+  std::swap(s.shader, shader);
+  return *this;
+}
+
+Shader::operator GLuint() const
+{
+  return shader;
+}
+
+Program::Program()
+  : program(glCreateProgram()), count(new unsigned int(1u))
+{
+}
+
+Program::~Program()
+{
+  if (!--*count)
+    {
+      glDeleteProgram(program);
+      delete count;
+    }
+}
+
+Program::Program(Program const &s)
+  : program(s.program), count(s.count)
+{
+  ++*count;
+}
+
+Program &Program::operator=(Program s)
+{
+  std::swap(s.count, count);
+  std::swap(s.program, program);
+  return *this;
+}
+
+Program::operator GLuint() const
+{
+  return program;
+}
+
+Vao::Vao()
+  : vao(0u), count(new unsigned int(1u))
+{
   glGenVertexArrays(1, &vao);
-  return (vao);
 }
 
-glBuffer my_opengl::createBuffer()
+Vao::~Vao()
 {
-  GLuint buffer;
+  if (!--*count)
+    {
+      glDeleteVertexArrays(1, &vao);
+      delete count;
+    }
+}
 
+Vao::Vao(Vao const &s)
+  : vao(s.vao), count(s.count)
+{
+  ++*count;
+}
+
+Vao &Vao::operator=(Vao s)
+{
+  std::swap(s.count, count);
+  std::swap(s.vao, vao);
+  return *this;
+}
+
+Vao::operator GLuint() const
+{
+  return vao;
+}
+
+glBuffer::glBuffer()
+  : buffer(0u), count(new unsigned int(1u))
+{
   glGenBuffers(1, &buffer);
-  return (buffer);
 }
 
-Framebuffer my_opengl::createFramebuffer()
+glBuffer::~glBuffer()
 {
-  Framebuffer framebuffer;
+  if (!--*count)
+    {
+      glDeleteBuffers(1, &buffer);
+      delete count;
+    }
+}
 
+glBuffer::glBuffer(glBuffer const &s)
+  : buffer(s.buffer), count(s.count)
+{
+  ++*count;
+}
+
+glBuffer &glBuffer::operator=(glBuffer s)
+{
+  std::swap(s.count, count);
+  std::swap(s.buffer, buffer);
+  return *this;
+}
+
+glBuffer::operator GLuint() const
+{
+  return buffer;
+}
+
+Framebuffer::Framebuffer()
+  : framebuffer(0u), count(new unsigned int(1u))
+{
   glGenFramebuffers(1, &framebuffer);
-  return (framebuffer);
 }
 
-Texture my_opengl::createTexture()
+Framebuffer::~Framebuffer()
 {
-  Texture texture;
+  if (!--*count)
+    {
+      glDeleteFramebuffers(1, &framebuffer);
+      delete count;
+    }
+}
 
+Framebuffer::Framebuffer(Framebuffer const &s)
+  : framebuffer(s.framebuffer), count(s.count)
+{
+  ++*count;
+}
+
+Framebuffer &Framebuffer::operator=(Framebuffer s)
+{
+  std::swap(s.count, count);
+  std::swap(s.framebuffer, framebuffer);
+  return *this;
+}
+
+Framebuffer::operator GLuint() const
+{
+  return framebuffer;
+}
+
+Texture::Texture()
+  : texture(0u), count(new unsigned int(1u))
+{
   glGenTextures(1, &texture);
-  return (texture);
+}
+
+Texture::~Texture()
+{
+  if (!--*count)
+    {
+      glDeleteTextures(1, &texture);
+      delete count;
+    }
+}
+
+Texture::Texture(Texture const &s)
+  : texture(s.texture), count(s.count)
+{
+  ++*count;
+}
+
+Texture &Texture::operator=(Texture s)
+{
+  std::swap(s.count, count);
+  std::swap(s.texture, texture);
+  return *this;
+}
+
+Texture::operator GLuint() const
+{
+  return texture;
 }
