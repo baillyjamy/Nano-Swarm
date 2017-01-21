@@ -13,12 +13,20 @@ class NanoBot
 public:
   enum Type
     {
-      WORKER,
-      BRUTE,
-      SHOOTER,
-      BOMBER,
-      UNKNOWN,
+      WORKER = 0,
+      BRUTE = 1,
+      SHOOTER = 2,
+      BOMBER = 3,
+      UNKNOWN = 4,
     };
+
+  static constexpr Vect<3u, double> botColors[UNKNOWN] = {
+    {0.5, 0.5, 0.5},
+    {1.0, 0.15, 0.15},
+    {0.15, 0.15, 1.0},
+    {0, 0.7, 0.3},
+  };
+
 private:
   Vect<2u, double> pos;
   Vect<2u, double> speed;
