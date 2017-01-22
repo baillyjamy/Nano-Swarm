@@ -3,7 +3,6 @@
 
 # include <vector>
 # include "my_opengl.hpp"
-# include "fixture.hpp"
 # include "render_context.hpp"
 # include "render_texture.hpp"
 # include "light.hpp"

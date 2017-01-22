@@ -1,6 +1,8 @@
 #ifndef MATH_HPP
 # define MATH_HPP
 
+# include "vect.hpp"
+
 namespace math
 {
   template<class T>

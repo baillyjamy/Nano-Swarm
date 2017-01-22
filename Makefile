@@ -23,6 +23,8 @@ SRCS_CPP = 	source/main.cpp \
 		source/scrap.cpp \
 		source/logic.cpp \
 		source/main_loop.cpp \
+		source/render_context.cpp \
+		source/render_texture.cpp \
 
 OBJS = 	$(SRCS_C:.c=.o) $(SRCS_CPP:.cpp=.o)
 

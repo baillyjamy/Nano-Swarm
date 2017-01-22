@@ -69,7 +69,6 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
 {
   (void)window;
   (void)scancode;
-  (void)action;
   (void)mode;
   switch (key)
     {

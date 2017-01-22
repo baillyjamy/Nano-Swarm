@@ -1,6 +1,8 @@
 #ifndef BIND_HPP
 # define BIND_HPP
 
+# include <algorithm>
+
 template<class T>
 class Bind
 {
@@ -35,7 +37,7 @@ public:
     std::swap(count, b.count);
     return *this;
   }
-  
+
 };
 
 #endif

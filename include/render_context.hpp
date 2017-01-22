@@ -10,17 +10,8 @@ public:
   Program const program;
   //  Vect<TextureCount, GLuint> textures; TODO: textures
 
-  void bind()
-  {
-    glBindVertexArray(vao);
-    glUseProgram(program);
-  }
-
-  void unbind()
-  {
-    glBindVertexArray(0);
-    glUseProgram(0);
-  }
+  void bind();
+  void unbind();
 };
 
 #endif // !RENDER_CONTEXT_HPP
