@@ -44,6 +44,8 @@ int main(void)
 	  std::cerr << "Music not charged" << std::endl;
 	  return (-1);
 	}
+      music.setLoop(true);
+      music.setVolume(10);
       music.play();
 
       while (!glfwWindowShouldClose(window))
