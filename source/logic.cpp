@@ -113,7 +113,7 @@ void Logic::spawnEnemies()
 	      {0, 0},
 	      false,
 	      static_cast<NanoBot::Type>(level % NanoBot::Type::UNKNOWN))
-      ->move(Vect<2u, double>{sin(level) * 0.9, cos(level * level * level) * 0.9} 
+      ->move(Vect<2u, double>{sin(level) * 0.9, cos(level * level * level) * 0.9}
 	     + Vect<2u, double>{(i % 5) * 0.05, (i / 5) * 0.05});
 }
 
@@ -214,11 +214,22 @@ void Logic::refreshSelection(Vect<4u, bool> keyPressed)
     }
 }
 
-void Logic::selectNearBots(Vect<2u, double> coord, NanoBot::Type type)
+void Logic::selectAllBots(Vect<4u, bool> keyPressed)
 {
-  // TODO: select unit surrounding units. If type != UNKNOWN, select only units of that type.
-  // set start pos to get relative move
-  selectStart = coord;
+  // clear selection
+  std::for_each(selectedBots.begin(), selectedBots.end(), [] (NanoBot *bot) {
+      bot->setSelection(false);
+    });
+  selectedBots.clear();
+
+  std::for_each(nanoBots.begin(), nanoBots.end(), [this, keyPressed] (NanoBot *bot){
+      if (bot->isAlly() && (keyPressed == Vect<4u, bool>(false, false, false, false) ||
+			    keyPressed[bot->getType()]))
+	{
+	  bot->setSelection(true);
+	  selectedBots.push_back(bot);
+	}
+    });
 }
 
 void Logic::moveSelection(Vect<2u, double> target)
