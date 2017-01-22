@@ -13,7 +13,6 @@ class Logic
 private:
   std::vector<NanoBot *> nanoBots;
   std::vector<NanoBot *> selectedBots;
-  std::vector<NanoBot *> toDelete;
   std::vector<Scrap *> scraps;
   std::vector<Scrap *> scrapsToDelete;
   std::vector<Light *> explosions;

@@ -64,7 +64,6 @@ std::string Logic::getScore() const
 
 void Logic::updateNanoBots()
 {
-  endGame = true;
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, n, &nearBots](NanoBot *m)
@@ -82,12 +81,18 @@ void Logic::updateNanoBots()
       if (n->update())
 	n->action(nearBots, nearScraps, *this);
     });
+
+
+  // if there is no ally : END GAME
+  endGame = true;
+
   std::vector<NanoBot *>::iterator it(nanoBots.begin());
   while (it != nanoBots.end())
     {
       if ((*it)->isAlly())
 	endGame = false;
-      if (std::find(toDelete.begin(), toDelete.end(), *it) != toDelete.end())
+
+      if ((*it)->isDeleted())
 	{
 	  addExplosion(new Light{(*it)->getPos(), {5.0, 5.0, 1.0, 1.0}, 0.1});
 	  scraps.push_back(new Scrap((*it)->getPos(), (*it)->getSpeed(), (*it)->getType()));
@@ -298,7 +303,6 @@ void Logic::kill(NanoBot *n)
     }
 
   removeLight(n->getLight());
-  toDelete.push_back(n);
   n->toDelete();
 
   // remove nanoBots from selection if selected
