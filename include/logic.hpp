@@ -20,13 +20,15 @@ private:
   std::vector<Light *> lights;
   unsigned int spawnDelay;
   unsigned int level;
+  bool endGame;
 public:
   static Logic& getInstance();
 
-  void tick();
+  bool tick();
   std::vector<NanoBot *> const &getNanoBots() const;
   std::vector<Scrap *> const &getScraps() const;
   std::vector<Laser *> const &getLasers() const;
+  std::vector<Light *> const &getLights() const;
   void kill(NanoBot *);
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size, Vect<4u, bool> keyPressed);
@@ -43,7 +45,7 @@ public:
   void updateLasers();
   void spawnEnemies();
   void removeLight(Light *);
-  std::vector<Light *> const &getLights() const;
+  bool checkEndGame();
 
   template <typename T>
   bool isInRange(T const &centre, NanoBot const &other, double const ray) {

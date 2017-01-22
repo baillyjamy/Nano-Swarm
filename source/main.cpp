@@ -39,7 +39,8 @@ int main(void)
 
       while (!glfwWindowShouldClose(window))
 	{
-	  mainLoop.tick();
+	  if (mainLoop.tick())
+	    break;
 	  glfwSwapBuffers(window);
 	  glfwPollEvents();
 	}
