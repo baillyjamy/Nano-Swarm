@@ -6,7 +6,7 @@
 constexpr const Vect<3u, double> NanoBot::botColors[NanoBot::UNKNOWN];
 
 NanoBot::NanoBot(Vect<2u, double> const &pos, Vect<2u, double> const &speed, bool isAlly, Type type, Light *light)
-  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light), target(pos)
+  : pos(pos), speed(speed), ally(isAlly), type(type), cooldown(0), selected(false), light(light), target(pos), deleted(false)
 {
 }
 
@@ -44,6 +44,16 @@ Vect<2u, double> NanoBot::getSpeed() const
 void NanoBot::move(Vect<2u, double> target)
 {
   this->target = target;
+}
+
+bool NanoBot::isDeleted() const
+{
+  return deleted;
+}
+
+void NanoBot::toDelete()
+{
+  deleted = true;
 }
 
 bool NanoBot::isSelected() const
@@ -202,7 +212,7 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BRUTE::attackRange)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BRUTE::attackRange && !(*it)->isDeleted())
 	{
 	  cooldown = BRUTE::cooldown;
 	  logic.kill(*it);
@@ -214,7 +224,7 @@ void NanoBot::shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < SHOOTER::attackRange)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < SHOOTER::attackRange && !(*it)->isDeleted())
 	{
 	  logic.addLaser(new Laser{pos, (*it)->pos, 1.0});
 	  cooldown = SHOOTER::cooldown;
@@ -228,12 +238,12 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::attackRange)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::attackRange && !(*it)->isDeleted())
 	{
 	  // kill every nanobot in range
 	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
 	    {
-	      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::explosionRange)
+	      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::explosionRange && !(*it)->isDeleted())
 		logic.kill(*it);
 	    }
 

@@ -148,9 +148,7 @@ bool Logic::tick()
   updateExplosions();
   updateLasers();
 
-  std::cout << "nb Ally : " << nbAlly << std::endl;
-
-  // add score for bot restant
+  // add score for remaining bot
   static int nbFrames = 0;
   if (nbFrames == 0)
     score.score += Score::BOT_FRAME * nbAlly;
@@ -285,6 +283,9 @@ std::vector<Scrap *> const &Logic::getScraps() const
 
 void Logic::kill(NanoBot *n)
 {
+  if (n->isDeleted())
+    return;
+
   // add score if enemy
   if (!n->isAlly())
     {
@@ -298,6 +299,7 @@ void Logic::kill(NanoBot *n)
 
   removeLight(n->getLight());
   toDelete.push_back(n);
+  n->toDelete();
 
   // remove nanoBots from selection if selected
   std::vector<NanoBot *>::iterator it = std::find(selectedBots.begin(), selectedBots.end(), n);

@@ -36,6 +36,7 @@ private:
   bool selected;
   Light *light;
   Vect<2u, double> target;
+  bool deleted;
 
 public:
   NanoBot(Vect<2u, double> const &, Vect<2u, double> const &, bool isAlly, Type type, Light *light);
@@ -45,6 +46,8 @@ public:
   bool isAlly() const;
   bool isSelected() const;
   void setSelection(bool selected);
+  bool isDeleted() const;
+  void toDelete();
   Type getType() const;
   void setCooldown(unsigned int);
   void tick(std::vector<NanoBot *> &nearBots);

@@ -44,7 +44,7 @@ int main(void)
 	  return (-1);
 	}
       music.setLoop(true);
-      music.setVolume(10);
+      music.setVolume(40);
       music.play();
 
       while (!glfwWindowShouldClose(window))
