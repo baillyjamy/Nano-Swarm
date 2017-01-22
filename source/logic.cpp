@@ -10,7 +10,6 @@ Logic::Logic()
 {
   spawnDelay = 0;
   level = 0;
-  //line fight BOMBER vs BRUTE
   for (unsigned int i(0); i < 20; i++)
     createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 + 0.4},
 	      {0, 0},
@@ -216,7 +215,6 @@ void Logic::refreshSelection(Vect<4u, bool> keyPressed)
 
 void Logic::selectAllBots(Vect<4u, bool> keyPressed)
 {
-  // clear selection
   std::for_each(selectedBots.begin(), selectedBots.end(), [] (NanoBot *bot) {
       bot->setSelection(false);
     });
@@ -247,7 +245,6 @@ void Logic::moveSelection(Vect<2u, double> target)
   std::for_each(selectedBots.begin(), selectedBots.end(), [target, &averagePos](NanoBot *bot) {
       Vect<2u, double> offset(bot->getPos() - averagePos);
       bot->move(offset / 2 + target);
-      // bot->move(target);
     });
 }
 
@@ -265,7 +262,6 @@ void Logic::kill(NanoBot *n)
 {
   removeLight(n->getLight());
   toDelete.push_back(n);
-  // remove if selected
   std::vector<NanoBot *>::iterator it = std::find(selectedBots.begin(), selectedBots.end(), n);
   if (it != selectedBots.end())
     selectedBots.erase(it);

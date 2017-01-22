@@ -19,15 +19,9 @@ bool NanoBot::update()
   if (delta.scalar(delta) > maxAccel)
     {
       if (delta.scalar(delta) > maxAccel * maxAccel)
-	{
-	  delta = delta.normalized() * maxAccel;
-	}
+	delta = delta.normalized() * maxAccel;
       speed += delta;
     }
-
-
-  // speed += pos * 0.005;
-
   pos += speed * 0.5;
   light->center = pos;
   light->color = !ally ? Vect<4u, float>{2.0, 0.5, 0.5, 1.0}
@@ -80,41 +74,17 @@ void NanoBot::setCooldown(unsigned int delay)
 
 void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 {
-  (void)nearBots;
-  // Code to seperate nanobots that does not work
-  // Vect<2u, double> dir{0.0, 0.0};
-
-  // for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
-  //   {
-  //     if ((*it)->isAlly() == ally && (*it)->getType() == type)
-  // 	{
-  // 	  Vect<2u, double> posDelta(pos - (*it)->pos);
-  // 	  Vect<2u, double> speedDelta(speed - (*it)->speed);
-  // 	  double coef = posDelta.scalar(posDelta) - 0.01;
-
-  // 	  coef = coef > 0.01 ? 1 / coef : coef;
-  // 	  //	  if (coef < 0.0001)
-  // 	  dir -= posDelta * coef;
-  // 	}
-  //   }
-  // if (dir.length() > 0.0001 * 0.0001)
-  //   dir = dir.normalized() * 0.0001;
-  // speed += dir;
-
-  //  speed -= pos * 0.000001;
-
   Vect<2u, double> dir{0.0, 0.0};
 
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() == ally)// && (*it)->getType() == type)
+      if ((*it)->isAlly() == ally)
   	{
   	  Vect<2u, double> posDelta(pos - (*it)->pos);
   	  Vect<2u, double> speedDelta(speed - (*it)->speed);
   	  double coef = posDelta.scalar(posDelta) - 0.01;
 
   	  coef = coef > 0.01 ? 1 / coef : coef;
-  	  //	  if (coef < 0.0001)
   	  dir += speedDelta * 0.005;
 	  dir += posDelta * 0.0001;
   	}
@@ -125,12 +95,10 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
   if (dir.length() > maxAccel * maxAccel)
     dir = dir.normalized() * maxAccel;
   speed += dir;
-  //  speed -= pos * 0.000001;
 }
 
 void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic)
 {
-  // returns true if the nanobot died during his action
   switch (type)
     {
     case WORKER:
@@ -238,7 +206,6 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	{
 	  cooldown = BRUTE::cooldown;
 	  logic.kill(*it);
-	  //	  return ;
 	}
     }
 }
