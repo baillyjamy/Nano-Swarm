@@ -1,11 +1,12 @@
 #include <iostream>
-#include "input.hpp"
+#include "callback.hpp"
 
 Vect<2u, double> Callback::pos(0, 0);
 Vect<2u, double> Callback::dragOrigin(0, 0);
 bool Callback::leftPressed = false;
 bool Callback::rightPressed = false;
 Vect<4u, bool> Callback::keyPressed = {false, false, false, false};
+bool Callback::spacePressed = false;
 
 void Callback::setCallbacks(GLFWwindow *window)
 {
@@ -75,6 +76,19 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
     case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, true);
       break;
+
+    case GLFW_KEY_SPACE:
+      if (action == GLFW_PRESS)
+	{
+	  spacePressed = true;
+	  Logic::getInstance().selectAllBots(keyPressed);
+	}
+      else if (action == GLFW_RELEASE)
+	{
+	  spacePressed = false;
+	}
+      break;
+
     case GLFW_KEY_1 ... GLFW_KEY_4:
       if (action == GLFW_PRESS)
 	{

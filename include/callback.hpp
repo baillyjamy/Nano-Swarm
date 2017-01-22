@@ -24,6 +24,7 @@ namespace Callback
 
   // key data
   extern Vect<4u, bool> keyPressed;
+  extern bool spacePressed;
 };
 
 #endif /* !CALLBACK_HPP_ */

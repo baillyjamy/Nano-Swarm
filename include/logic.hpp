@@ -28,7 +28,7 @@ public:
   std::vector<Scrap *> const &getScraps() const;
   std::vector<Laser *> const &getLasers() const;
   void kill(NanoBot *);
-  void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
+  void selectAllBots(Vect<4u, bool> keyPressed);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size, Vect<4u, bool> keyPressed);
   void refreshSelection(Vect<4u, bool> keyPressed);
   void destroyScrap(Scrap *);
