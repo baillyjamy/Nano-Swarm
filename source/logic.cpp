@@ -3,6 +3,7 @@
 #include <cmath>
 #include "logic.hpp"
 #include "light.hpp"
+#include "music.hpp"
 
 Logic Logic::instance = Logic();
 
@@ -168,7 +169,7 @@ void Logic::updateExplosions()
     {
       if ((*it)->color[3] == 1.0f)
         {
-          //play sound
+          Music::getInstance().playExplosionSound();
         }
       (*it)->color[3] -= 0.2;
       (*it)->radius += 0.05;

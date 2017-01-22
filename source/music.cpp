@@ -5,17 +5,17 @@ Music Music::instance = Music();
 
 Music::Music() : mainMusic(), explosionSound()
 {
-  if (!mainMusic.openFromFile("background_music.ogg"))
+  if (!mainMusic.openFromFile("sound/background_music.ogg"))
     {
       std::cerr << "Music not charged" << std::endl;
       exit(-1);
     }
 
-  // if (!explosionSound.loadFromFile("sound.wav"))
-  //   {
-  //     std::cerr << "Sound buffer not charged: explosion" << std::endl;
-  //     exit(-1);
-  //   }
+  if (!explosionSound.loadFromFile("sound/explosion.wav"))
+    {
+      std::cerr << "Sound buffer not charged: explosion" << std::endl;
+      exit(-1);
+    }
 }
 
 Music& Music::getInstance()
@@ -32,9 +32,9 @@ void Music::playMainMusic()
 
 void Music::playExplosionSound()
 {
-  sf::Sound sound;
-  sound.setBuffer(explosionSound);
-  sound.setLoop(false);
-  sound.setVolume(40);
-  sound.play();
+  sf::Sound * sound = new sf::Sound();
+  sound->setBuffer(explosionSound);
+  sound->setLoop(false);
+  sound->setVolume(40);
+  sound->play();
 }
