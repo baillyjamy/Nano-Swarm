@@ -191,6 +191,7 @@ void Logic::deleteSounds()
     {
       if ((*it)->getStatus() != sf::SoundSource::Status::Playing)
 	{
+	  delete *it;
           it = explosionSounds.erase(it);
 	}
       else
