@@ -1,4 +1,5 @@
 #include <iostream>
+#include "main_loop.hpp"
 #include "callback.hpp"
 
 Vect<2u, double> Callback::pos(0, 0);
@@ -109,7 +110,7 @@ void Callback::keyCallback(GLFWwindow *window, int key, int scancode, int action
 
 Vect<2u, double> Callback::screenToGame(Vect<2u, double> pos)
 {
-  return (pos - Vect<2u, double>(1920 - 1080, 0) * 0.5) / Vect<2u, double>(1080 * 0.5, -1080 * 0.5) + Vect<2u, double>(-1.0, 1.0);
+  return (pos - Vect<2u, double>(WIDTH - HEIGHT, 0) * 0.5) / Vect<2u, double>(HEIGHT * 0.5, -HEIGHT * 0.5) + Vect<2u, double>(-1.0, 1.0);
 }
 
 void Callback::selectBots()

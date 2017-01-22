@@ -4,6 +4,9 @@
 #include "display.hpp"
 #include "logic.hpp"
 
+#define WIDTH 1920
+#define HEIGHT 1080
+
 class MainLoop
 {
 private:

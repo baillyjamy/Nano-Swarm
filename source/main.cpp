@@ -30,7 +30,7 @@ int main(void)
   //  feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
   try
     {
-      Vect<2u, unsigned int> dim(1920, 1080);
+      Vect<2u, unsigned int> dim(WIDTH, HEIGHT);
       // Vect<2u, unsigned int> dim(800, 600);
       GLFWwindow *window = init(dim);
       // should probably be moved to constructor...
