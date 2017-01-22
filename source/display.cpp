@@ -165,7 +165,7 @@ void Display::renderLights()
   std::for_each(logic.getLights().begin(), logic.getLights().end(),
 		[&data, &i](Light *l)
 		{
-		  
+
 		  for (unsigned int j(0); j < 20u; j++)
 		    {
 		      data[i++] = l->center[0];
@@ -241,9 +241,9 @@ void Display::renderLasers()
   glDisable(GL_BLEND);
 }
 
-void Display::displayScore()
+void Display::displayScore(Vect<2u, double> pos, std::string score)
 {
-  std::string score("9785634120");
+  // std::string score("9785634120");
   float *data(new float[score.size() * 4u * 6u]);
   Bind<RenderContext> bind(hudRenderContext);
   constexpr const double width(0.04f);
@@ -256,8 +256,8 @@ void Display::displayScore()
 	{
 	  data[i++] = (score[k] - '0' + (j & 1u)) * 0.1;
 	  data[i++] = !(j <= 1 || j == 3);
-	  data[i++] = (k + (j & 1u)) * width - 0.9;
-	  data[i++] = (j <= 1 || j == 3) * height - 0.9;
+	  data[i++] = (k + (j & 1u)) * width + pos[0];
+	  data[i++] = (j <= 1 || j == 3) * height + pos[1];
 	}
     }
   glBindBuffer(GL_ARRAY_BUFFER, scoreBuffer);
@@ -396,6 +396,6 @@ void Display::render()
   displayBots();
   displayScraps();
   postProcess();
-  displayScore();
+  displayScore({-0.9, -0.9}, Logic::getInstance().getScore());
   fpsCounter.tick();
 }

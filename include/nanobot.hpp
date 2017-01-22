@@ -81,7 +81,7 @@ namespace SHOOTER
 namespace BOMBER
 {
   constexpr double attackRange = 0.01;
-  constexpr double explosionRange = 0.01;
+  constexpr double explosionRange = 0.06;
 }
 
 #endif

@@ -37,7 +37,7 @@ public:
   void setOffsetAndScale(Program program);
   void displayBots();
   void displayScraps();
-  void displayScore();
+  void displayScore(Vect<2u, double> pos, std::string score);
   void renderLights();
   void renderLasers();
   void postProcess();

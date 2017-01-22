@@ -266,7 +266,7 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	  // kill every nanobot in range
 	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
 	    {
-	      if ((pos - (*it)->pos).length() < BOMBER::explosionRange)
+	      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::explosionRange)
 		logic.kill(*it);
 	    }
 

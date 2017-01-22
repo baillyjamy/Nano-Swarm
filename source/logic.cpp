@@ -10,7 +10,8 @@ Logic::Logic()
 {
   spawnDelay = 0;
   level = 0;
-  //line fight BOMBER vs BRUTE
+  nbAlly = 0;
+  // create bots !!
   for (unsigned int i(0); i < 20; i++)
     createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 + 0.4},
 	      {0, 0},
@@ -26,6 +27,7 @@ Logic::Logic()
 	      {0, 0},
 	      true,
 	      NanoBot::SHOOTER);
+  score = {0, 0, 0};
 }
 
 NanoBot *Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type)
@@ -38,12 +40,26 @@ NanoBot *Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool all
   NanoBot *n = new NanoBot(pos, speed, ally, type, l);
 
   nanoBots.push_back(n);
+
+  // add score
+  if (ally)
+    {
+      ++nbAlly;
+      score.score += Score::BOT_CREATED;
+      score.botCreated += 1;
+    }
+
   return n;
 }
 
 Logic& Logic::getInstance()
 {
   return instance;
+}
+
+std::string Logic::getScore() const
+{
+  return std::to_string(score.score);
 }
 
 void Logic::updateNanoBots()
@@ -131,6 +147,14 @@ bool Logic::tick()
   updateScraps();
   updateExplosions();
   updateLasers();
+
+  std::cout << "nb Ally : " << nbAlly << std::endl;
+
+  // add score for bot restant
+  static int nbFrames = 0;
+  if (nbFrames == 0)
+    score.score += Score::BOT_FRAME * nbAlly;
+  nbFrames = (nbFrames + 1) % 60;
   return checkEndGame();
 }
 
@@ -263,9 +287,21 @@ std::vector<Scrap *> const &Logic::getScraps() const
 
 void Logic::kill(NanoBot *n)
 {
+  // add score if enemy
+  if (!n->isAlly())
+    {
+      score.score += Score::BOT_KILLED;
+      score.botKilled += 1;
+    }
+  else
+    {
+      --nbAlly;
+    }
+
   removeLight(n->getLight());
   toDelete.push_back(n);
-  // remove if selected
+
+  // remove nanoBots from selection if selected
   std::vector<NanoBot *>::iterator it = std::find(selectedBots.begin(), selectedBots.end(), n);
   if (it != selectedBots.end())
     selectedBots.erase(it);
@@ -275,7 +311,6 @@ void Logic::destroyScrap(Scrap *r)
 {
   scrapsToDelete.push_back(r);
 }
-
 
 void Logic::addLight(Light *l)
 {
@@ -293,7 +328,12 @@ void Logic::removeLight(Light *l)
 bool Logic::checkEndGame()
 {
   if (endGame)
-    std::cout << "END GAME" << std::endl;
+    {
+      std::cout << "END GAME" << std::endl;
+      std::cout << "Score : " << score.score << std::endl;
+      std::cout << "Bot killed : " << score.botKilled << std::endl;
+      std::cout << "Bot created : " << score.botCreated << std::endl;
+    }
   return (endGame);
 }
 
