@@ -23,51 +23,127 @@ static inline RenderContext contextFromFiles(std::string name)
 					     {vert.str(), frag.str()})};
 }
 
+static inline Texture loadNumbers()
+{
+  Texture texture;
+  // Gimp image export
+  static struct {
+    unsigned       width;
+    unsigned       height;
+    unsigned       bytes_per_pixel; /* 2:RGB16, 3:RGB, 4:RGBA */
+    unsigned char  pixel_data[40 * 5 * 4 + 1];
+  } numberImage = {
+    40, 5, 4,
+  "\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0"
+  "\377\377\377\377\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377"
+  "\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377"
+  "\377\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\377\377\377\377"
+  "\377\377\377\377\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377"
+  "\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377"
+  "\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377\377\377\377\377"
+  "\377\377\377\377\377\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377"
+  "\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377"
+  "\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377"
+  "\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0"
+  "\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\5\377\377\377"
+  "\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377"
+  "\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377"
+  "\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\377"
+  "\377\377\377\377\377\377\377\0\0\0\0\377\377\377\377\377\377\377\377\377"
+  "\377\377\377\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0"
+  "\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377\377"
+  "\377\377\377\377\377\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377"
+  "\377\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377"
+  "\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377\377\377\0\0"
+  "\0\0\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377"
+  "\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0"
+  "\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377"
+  "\377\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\0\0\0\0\0\0\0\0\377"
+  "\377\377\377\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\0\0"
+  "\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377\377\377\377\377\377\377"
+  "\377\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0\0\0\377"
+  "\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377\377\377\377"
+  "\377\377\377\377\377\377\377\0\0\0\0\0\0\0\0\0\0\0\0\377\377\377\377\0\0"
+  "\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377\377\377"
+  "\377\377\377\377\377\377\377\377\377\0\0\0\0\0\0\0\0\377\377\377\377\0\0"
+  "\0\0\0\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0\377"
+    "\377\377\377\377\377\377\377\377\377\377\377\0\0\0\0",
+  };
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexImage2D(GL_TEXTURE_2D,
+	       0,
+	       GL_RGBA8,
+	       numberImage.width,
+	       numberImage.height,
+	       0,
+	       GL_RGBA,
+	       GL_UNSIGNED_BYTE,
+	       static_cast<void *>(numberImage.pixel_data));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  return texture;
+}
+
 Display::Display(Vect<2u, unsigned int> size, Logic &logic)
   : size(size), offset{0.0f, 0.0f}, scale{static_cast<float>(size[1]) / static_cast<float>(size[0]), 1.0f},
-  worldRenderContext(contextFromFiles("basic")),
-  lightRenderContext(contextFromFiles("color")),
-  postProcessContext(contextFromFiles("multiply")),
-  fixtureBuffer(),
-  lightBuffer(),
-  cornerBuffer(),
-  lightRenderTexture(size),
-  worldRenderTexture(size),
-  fpsCounter(),
-  logic(logic)
-{
+	  worldRenderContext(contextFromFiles("basic")),
+	  lightRenderContext(contextFromFiles("color")),
+	  postProcessContext(contextFromFiles("multiply")),
+	  hudRenderContext(contextFromFiles("texture")),
+	  fixtureBuffer(),
+	  lightBuffer(),
+	  cornerBuffer(),
+	  scoreBuffer(),
+	  lightRenderTexture(size),
+	  worldRenderTexture(size),
+	  numbers(loadNumbers()),
+	  fpsCounter(),
+	  logic(logic)
   {
-    Bind<RenderContext> bind(worldRenderContext);
+    {
+      Bind<RenderContext> bind(worldRenderContext);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 0, 0, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
-  }
-  {
-    Bind<RenderContext> bind(lightRenderContext);
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
+      glBufferData(GL_ARRAY_BUFFER, 0, 0, GL_STATIC_DRAW);
+      glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), nullptr);
+      glVertexAttribPointer(1, 3, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    }
+    {
+      Bind<RenderContext> bind(lightRenderContext);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, lightBuffer);
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 6 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 4, GL_FLOAT, false, 6 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
-  }
-  {
-    Bind<RenderContext> bind(postProcessContext);
-    float const data[8]{0.0f, 0.0f,
-	0.0f, 1.0f,
-	1.0f, 0.0f,
-	1.0f, 1.0f};
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glBindBuffer(GL_ARRAY_BUFFER, lightBuffer);
+      glVertexAttribPointer(0, 2, GL_FLOAT, false, 6 * sizeof(float), nullptr);
+      glVertexAttribPointer(1, 4, GL_FLOAT, false, 6 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    }
+    {
+      Bind<RenderContext> bind(postProcessContext);
+      float const data[8]{0.0f, 0.0f,
+	  0.0f, 1.0f,
+	  1.0f, 0.0f,
+	  1.0f, 1.0f};
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, cornerBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), data, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(float), nullptr);
+      glEnableVertexAttribArray(0);
+      glBindBuffer(GL_ARRAY_BUFFER, cornerBuffer);
+      glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), data, GL_STATIC_DRAW);
+      glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(float), nullptr);
+    }
+    {
+      Bind<RenderContext> bind(hudRenderContext);
+
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glBindBuffer(GL_ARRAY_BUFFER, scoreBuffer);
+      glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * sizeof(float), nullptr);
+      glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    }
   }
-}
 
 Display::~Display()
 {
@@ -165,6 +241,36 @@ void Display::renderLasers()
   glDisable(GL_BLEND);
 }
 
+void Display::displayScore()
+{
+  std::string score("9785634120");
+  float *data(new float[score.size() * 4u * 6u]);
+  Bind<RenderContext> bind(hudRenderContext);
+  constexpr const double width(0.04f);
+  constexpr const double height(0.05f);
+  unsigned int i(0);
+
+  for (unsigned k(0); k < score.size(); ++k)
+    {
+      for (unsigned j(0); j < 6u; ++j)
+	{
+	  data[i++] = (score[k] - '0' + (j & 1u)) * 0.1;
+	  data[i++] = !(j <= 1 || j == 3);
+	  data[i++] = (k + (j & 1u)) * width - 0.9;
+	  data[i++] = (j <= 1 || j == 3) * height - 0.9;
+	}
+    }
+  glBindBuffer(GL_ARRAY_BUFFER, scoreBuffer);
+  glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
+  delete [] data;
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, numbers);
+  my_opengl::setUniform(0u, "tex", hudRenderContext.program);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+  glDrawArrays(GL_TRIANGLES, 0, i / 4u);
+}
+
 void Display::displayBots()
 {
   Bind<RenderContext> bind(worldRenderContext);
@@ -179,7 +285,7 @@ void Display::displayBots()
 			     (n->isSelected() ? Vect<3u, double>{1.0, 1.0, 1.0} :
 			      Vect<3u, double>{0.0, 1.0, 0.0}));
       Vect<3u, double> color(NanoBot::botColors[n->getType()] * 0.9 + colorTip * 0.1);
-      
+
       data[i++] = n->getPos()[0] + d[0];
       data[i++] = n->getPos()[1] + d[1];
       data[i++] = color[0];
@@ -195,21 +301,6 @@ void Display::displayBots()
       data[i++] = color[0];
       data[i++] = color[1];
       data[i++] = color[2];
-      // data[i++] = n->getPos()[0];
-      // data[i++] = n->getPos()[1];
-      // data[i++] = colorTip[0];
-      // data[i++] = colorTip[1];
-      // data[i++] = colorTip[2];
-      // data[i++] = n->getPos()[0] + d[1] * 0.5 - d[0];
-      // data[i++] = n->getPos()[1] - d[0] * 0.5 - d[1];
-      // data[i++] = colorTip[0];
-      // data[i++] = colorTip[1];
-      // data[i++] = colorTip[2];
-      // data[i++] = n->getPos()[0] - d[1] * 0.5 - d[0];
-      // data[i++] = n->getPos()[1] + d[0] * 0.5 - d[1];
-      // data[i++] = colorTip[0];
-      // data[i++] = colorTip[1];
-      // data[i++] = colorTip[2];
     }
   glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
   glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
@@ -305,5 +396,6 @@ void Display::render()
   displayBots();
   displayScraps();
   postProcess();
+  displayScore();
   fpsCounter.tick();
 }

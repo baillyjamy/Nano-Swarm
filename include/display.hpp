@@ -19,11 +19,14 @@ private:
   RenderContext const worldRenderContext;
   RenderContext const lightRenderContext;
   RenderContext const postProcessContext;
+  RenderContext const hudRenderContext;
   glBuffer fixtureBuffer;
   glBuffer lightBuffer;
   glBuffer cornerBuffer;
+  glBuffer scoreBuffer;
   RenderTexture lightRenderTexture;
   RenderTexture worldRenderTexture;
+  Texture numbers;
   FPSCounter fpsCounter;
   Logic &logic;
 
@@ -34,6 +37,7 @@ public:
   void setOffsetAndScale(Program program);
   void displayBots();
   void displayScraps();
+  void displayScore();
   void renderLights();
   void renderLasers();
   void postProcess();
