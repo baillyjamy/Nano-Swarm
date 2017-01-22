@@ -9,7 +9,7 @@ public:
   static Music& getInstance();
 
   void playMainMusic();
-  void playExplosionSound();
+  sf::Sound *playExplosionSound();
 
 private:
   Music();

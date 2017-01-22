@@ -1,6 +1,7 @@
 #ifndef LOGIC_HPP_
 # define LOGIC_HPP_
 
+# include <SFML/Audio.hpp>
 # include <string>
 # include <vector>
 # include "nanobot.hpp"
@@ -24,6 +25,7 @@ private:
   bool endGame;
   Score score;
   unsigned int nbAlly;
+  std::vector<sf::Sound *> explosionSounds;
 public:
   static Logic& getInstance();
 
@@ -50,6 +52,7 @@ public:
   void spawnEnemies();
   void removeLight(Light *);
   bool checkEndGame();
+  void deleteSounds();
 
   template <typename T>
   bool isInRange(T const &centre, NanoBot const &other, double const ray) {

@@ -153,6 +153,7 @@ bool Logic::tick()
   updateScraps();
   updateExplosions();
   updateLasers();
+  deleteSounds();
 
   // add score for remaining bot
   static int nbFrames = 0;
@@ -169,7 +170,7 @@ void Logic::updateExplosions()
     {
       if ((*it)->color[3] == 1.0f)
         {
-          Music::getInstance().playExplosionSound();
+          explosionSounds.push_back(Music::getInstance().playExplosionSound());
         }
       (*it)->color[3] -= 0.2;
       (*it)->radius += 0.05;
@@ -178,6 +179,20 @@ void Logic::updateExplosions()
           removeLight(*it);
           it = explosions.erase(it);
         }
+      else
+        ++it;
+    }
+}
+
+void Logic::deleteSounds()
+{
+  std::vector<sf::Sound *>::iterator it(explosionSounds.begin());
+  while (it != explosionSounds.end())
+    {
+      if ((*it)->getStatus() != sf::SoundSource::Status::Playing)
+	{
+          it = explosionSounds.erase(it);
+	}
       else
         ++it;
     }

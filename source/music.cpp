@@ -30,11 +30,12 @@ void Music::playMainMusic()
   mainMusic.play();
 }
 
-void Music::playExplosionSound()
+sf::Sound *Music::playExplosionSound()
 {
   sf::Sound * sound = new sf::Sound();
   sound->setBuffer(explosionSound);
   sound->setLoop(false);
   sound->setVolume(40);
   sound->play();
+  return sound;
 }
