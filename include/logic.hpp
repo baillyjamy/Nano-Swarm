@@ -32,7 +32,7 @@ public:
   std::vector<Scrap *> const &getScraps() const;
   std::vector<Laser *> const &getLasers() const;
   std::vector<Light *> const &getLights() const;
-  std::string getScore() const;
+  Score const& getScore() const;
   void kill(NanoBot *);
   void selectAllBots(Vect<4u, bool> keyPressed);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size, Vect<4u, bool> keyPressed);

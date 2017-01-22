@@ -57,9 +57,9 @@ Logic& Logic::getInstance()
   return instance;
 }
 
-std::string Logic::getScore() const
+Score const& Logic::getScore() const
 {
-  return std::to_string(score.score);
+  return score;
 }
 
 void Logic::updateNanoBots()

@@ -393,6 +393,13 @@ void Display::render()
   displayBots();
   displayScraps();
   postProcess();
-  displayScore({-0.9, -0.9}, Logic::getInstance().getScore());
+
+  // display score
+  displayScore({-0.9, 0.9}, std::to_string(Logic::getInstance().getScore().score));
+  // display botKilled
+  displayScore({-0.9, -0.9}, std::to_string(Logic::getInstance().getScore().botKilled));
+  // display botCreated
+  displayScore({+0.85, -0.9}, std::to_string(Logic::getInstance().getScore().botCreated));
+
   fpsCounter.tick();
 }

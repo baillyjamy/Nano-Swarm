@@ -25,7 +25,7 @@ bool NanoBot::update()
   pos += speed * 0.5;
   light->center = pos;
   light->color = !ally ? Vect<4u, float>{2.0, 0.5, 0.5, 1.0}
-  : (selected ? Vect<4u, float>{1.0, 1.0, 0.75, 1.0}
+  : (selected ? Vect<4u, float>{1.0, 2.0, 0.75, 1.0}
   : Vect<4u, float>{0.75, 2.0, 0.75, 1.0});
   speed *= 0.9;
   return !(cooldown -= !!cooldown);
