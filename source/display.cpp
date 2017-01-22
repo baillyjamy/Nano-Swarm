@@ -255,7 +255,10 @@ void Display::displayScore(Vect<2u, double> pos, std::string score)
 	{
 	  data[i++] = (score[k] - '0' + (j & 1u)) * 0.1;
 	  data[i++] = !(j <= 1 || j == 3);
-	  data[i++] = (k + (j & 1u)) * width + pos[0];
+	  if (pos[0] < 0)
+	    data[i++] = (k + (j & 1u)) * width + pos[0];
+	  else
+	    data[i++] = (k + (j & 1u)) * width + pos[0] - (score.size() * width);
 	  data[i++] = (j <= 1 || j == 3) * height + pos[1];
 	}
     }
@@ -395,7 +398,7 @@ void Display::render()
   postProcess();
 
   // display score
-  displayScore({-0.9, 0.9}, std::to_string(Logic::getInstance().getScore().score));
+  displayScore({-0.9, 0.85}, std::to_string(Logic::getInstance().getScore().score));
   // display botKilled
   displayScore({-0.9, -0.9}, std::to_string(Logic::getInstance().getScore().botKilled));
   // display botCreated
