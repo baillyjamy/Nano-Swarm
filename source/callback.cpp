@@ -26,6 +26,8 @@ void Callback::mouseCallback(GLFWwindow *window, double x, double y)
     }
   if (rightPressed)
     {
+      if (spacePressed)
+	Logic::getInstance().selectAllBots(keyPressed);
       Logic::getInstance().moveSelection(pos);
     }
 }

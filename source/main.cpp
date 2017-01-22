@@ -5,6 +5,7 @@
 #include "my_opengl.hpp"
 #include "main_loop.hpp"
 #include "callback.hpp"
+#include "music.hpp"
 
 static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
 {
@@ -37,22 +38,7 @@ int main(void)
 
       Callback::setCallbacks(window);
 
-      sf::SoundBuffer explosionSound;
-      if (!buffer.loadFromFile("sound.wav"))
-        {
-          std::cerr << "Sound buffer not charged: explosion" << std::endl;
-          return -1;
-        }
-
-      sf::Music music;
-      if (!music.openFromFile("background_music.ogg"))
-        {
-          std::cerr << "Music not charged" << std::endl;
-          return (-1);
-        }
-      music.setLoop(true);
-      music.setVolume(40);
-      music.play();
+      Music::getInstance().playMainMusic();
       while (!glfwWindowShouldClose(window))
         {
           if (mainLoop.tick())

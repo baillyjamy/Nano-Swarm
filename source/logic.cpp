@@ -166,7 +166,7 @@ void Logic::updateExplosions()
   std::vector<Light *>::iterator it(explosions.begin());
   while (it != explosions.end())
     {
-      if ((*it)->color[3] == 1f)
+      if ((*it)->color[3] == 1.0f)
         {
           //play sound
         }

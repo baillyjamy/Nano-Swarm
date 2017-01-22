@@ -26,6 +26,7 @@ SRCS_CPP = 	source/main.cpp \
 		source/render_context.cpp \
 		source/render_texture.cpp \
 		source/number_texture.cpp \
+		source/music.cpp \
 
 OBJS = 	$(SRCS_C:.c=.o) $(SRCS_CPP:.cpp=.o)
 
