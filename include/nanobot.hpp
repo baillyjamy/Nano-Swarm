@@ -53,7 +53,6 @@ public:
   void move(Vect<2u, double> target);
 
 private:
-  // returns true if the nanobot died during his action
   void workerAction(std::vector<Scrap *> &nearScraps, Logic &logic);
   void bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic);
   void shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic);

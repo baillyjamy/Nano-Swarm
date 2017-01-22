@@ -165,7 +165,6 @@ void Display::renderLights()
   std::for_each(logic.getLights().begin(), logic.getLights().end(),
 		[&data, &i](Light *l)
 		{
-
 		  for (unsigned int j(0); j < 20u; j++)
 		    {
 		      data[i++] = l->center[0];
@@ -388,8 +387,6 @@ void Display::postProcess()
 
 void Display::render()
 {
-  // lights[0].center += {-0.01, 0.01};
-  //  lights[0].center[0] -= 0.01;
   renderLights();
   renderLasers();
   displayMouseSelection();

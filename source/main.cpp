@@ -13,7 +13,6 @@ static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
   GLFWwindow *window;
 
   window = glfwCreateWindow(dim[0], dim[1], "Hello World", glfwGetPrimaryMonitor(), NULL);
-  // window = glfwCreateWindow(dim[0], dim[1], "Hello World", NULL, NULL);
   if (!window)
     throw "failed to open window";
   glfwSwapInterval(1);

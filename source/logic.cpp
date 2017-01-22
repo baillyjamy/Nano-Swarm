@@ -240,7 +240,6 @@ void Logic::refreshSelection(Vect<4u, bool> keyPressed)
 
 void Logic::selectAllBots(Vect<4u, bool> keyPressed)
 {
-  // clear selection
   std::for_each(selectedBots.begin(), selectedBots.end(), [] (NanoBot *bot) {
       bot->setSelection(false);
     });
@@ -271,7 +270,6 @@ void Logic::moveSelection(Vect<2u, double> target)
   std::for_each(selectedBots.begin(), selectedBots.end(), [target, &averagePos](NanoBot *bot) {
       Vect<2u, double> offset(bot->getPos() - averagePos);
       bot->move(offset / 2 + target);
-      // bot->move(target);
     });
 }
 
