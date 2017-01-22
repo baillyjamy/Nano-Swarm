@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fenv.h>
+#include <SFML/Audio.hpp>
 #include "my_opengl.hpp"
 #include "main_loop.hpp"
 #include "callback.hpp"
@@ -36,6 +37,14 @@ int main(void)
       MainLoop mainLoop(dim);
 
       Callback::setCallbacks(window);
+
+      sf::Music music;
+      if (!music.openFromFile("background_music.ogg"))
+	{
+	  std::cerr << "Music not charged" << std::endl;
+	  return (-1);
+	}
+      music.play();
 
       while (!glfwWindowShouldClose(window))
 	{
