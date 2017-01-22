@@ -5,8 +5,8 @@ MainLoop::MainLoop(Vect<2u, unsigned int> dim)
 {
 }
 
-void MainLoop::tick()
+bool MainLoop::tick()
 {
   display.render();
-  logic.tick();
+  return logic.tick();
 }

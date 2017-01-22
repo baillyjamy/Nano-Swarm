@@ -12,7 +12,7 @@ private:
 public:
   MainLoop(Vect<2u, unsigned int> dim);
 
-  void tick();
+  bool tick();
 };
 
 #endif // !MAIN_LOOP_HPP

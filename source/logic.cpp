@@ -48,6 +48,7 @@ Logic& Logic::getInstance()
 
 void Logic::updateNanoBots()
 {
+  endGame = true;
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, n, &nearBots](NanoBot *m)
@@ -68,6 +69,8 @@ void Logic::updateNanoBots()
   std::vector<NanoBot *>::iterator it(nanoBots.begin());
   while (it != nanoBots.end())
     {
+      if ((*it)->isAlly())
+	endGame = false;
       if (std::find(toDelete.begin(), toDelete.end(), *it) != toDelete.end())
 	{
 	  addExplosion(new Light{(*it)->getPos(), {5.0, 5.0, 1.0, 1.0}, 0.1});
@@ -114,7 +117,7 @@ void Logic::spawnEnemies()
 	     + Vect<2u, double>{(i % 5) * 0.05, (i / 5) * 0.05});
 }
 
-void Logic::tick()
+bool Logic::tick()
 {
   if (spawnDelay == 0)
     {
@@ -128,6 +131,7 @@ void Logic::tick()
   updateScraps();
   updateExplosions();
   updateLasers();
+  return checkEndGame();
 }
 
 void Logic::updateExplosions()
@@ -284,6 +288,13 @@ void Logic::removeLight(Light *l)
 
   if (pos != lights.end())
     lights.erase(pos);
+}
+
+bool Logic::checkEndGame()
+{
+  if (endGame)
+    std::cout << "END GAME" << std::endl;
+  return (endGame);
 }
 
 std::vector<Light *> const &Logic::getLights() const
