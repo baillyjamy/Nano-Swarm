@@ -89,6 +89,7 @@ void Display::renderLights()
   std::for_each(logic.getLights().begin(), logic.getLights().end(),
 		[&data, &i](Light *l)
 		{
+		  
 		  for (unsigned int j(0); j < 20u; j++)
 		    {
 		      data[i++] = l->center[0];
@@ -116,8 +117,50 @@ void Display::renderLights()
   delete [] data;
   setOffsetAndScale(lightRenderContext.program);
   glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+  glDrawArrays(GL_TRIANGLES, 0, i / 6u);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glDisable(GL_BLEND);
+}
+
+void Display::renderLasers()
+{
+  Bind<RenderContext> bind(lightRenderContext);
+  float *data(new float[logic.getLasers().size() * 6u * 6u * 2u]);
+  unsigned int i(0);
+
+  std::for_each(logic.getLasers().begin(), logic.getLasers().end(),
+		[&data, &i](Laser *l)
+		{
+		  Vect<2u, double> d((l->end - l->start).normalized() * 0.03 * l->power);
+		  std::cout << d[0] << ":" << d[1] << std::endl;
+		  for (unsigned int a(0); a <= 2u; a += 2)
+		    {
+		      Vect<2u, double> off(Vect<2u, double>(d[1], -d[0]) * (static_cast<double>(a) - 1.0));
+
+		      std::cout << off[0] << "," << off[1] << std::endl;
+		      for (unsigned int j(0); j < 6u; j++)
+			{
+			  Vect<2u, double> pos((j & 1 ? l->start : l->end) + (off * (j <= 1 || j == 3)));
+
+			  //			  std::cout << pos[0] << "," << pos[1] << std::endl;
+			  data[i++] = pos[0];
+			  data[i++] = pos[1];
+			  data[i++] = !(j <= 1 || j == 3) * 1.0;
+			  data[i++] = 2.0;
+			  data[i++] = 2.0;
+			  data[i++] = !(j <= 1 || j == 3);
+			}
+		    }
+		});
+  glBindBuffer(GL_ARRAY_BUFFER, lightBuffer);
+  glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
+  delete [] data;
+  setOffsetAndScale(lightRenderContext.program);
+  glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glDrawArrays(GL_TRIANGLES, 0, i / 6u);
@@ -128,29 +171,48 @@ void Display::renderLights()
 void Display::displayBots()
 {
   Bind<RenderContext> bind(worldRenderContext);
-  float *data = new float[logic.getNanoBots().size() * 4 * 5 * 3];
+  float *data = new float[logic.getNanoBots().size() * 5 * 3];
   unsigned int i(0);
 
   for (unsigned int j(0); j < logic.getNanoBots().size(); j++)
     {
-      Vect<2u, double> d(logic.getNanoBots()[j]->getSpeed().normalized() * 0.015);
-      Vect<3u, double> color(1.0, 1.0, 1.0);//NanoBot::botColors[logic.getNanoBots()[j]->getType()]);
-
-      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[0];
-      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[1];
+      NanoBot *n = logic.getNanoBots()[j];
+      Vect<2u, double> d(n->getSpeed().normalized() * 0.03);
+      Vect<3u, double> colorTip(!n->isAlly() ? Vect<3u, double>{0.0, 0.5, 0.0} :
+			     (n->isSelected() ? Vect<3u, double>{1.0, 1.0, 1.0} :
+			      Vect<3u, double>{0.0, 1.0, 0.0}));
+      Vect<3u, double> color(NanoBot::botColors[n->getType()] * 0.9 + colorTip * 0.1);
+      
+      data[i++] = n->getPos()[0] + d[0];
+      data[i++] = n->getPos()[1] + d[1];
       data[i++] = color[0];
       data[i++] = color[1];
       data[i++] = color[2];
-      data[i++] = logic.getNanoBots()[j]->getPos()[0] + d[1] * 0.5 - d[0];
-      data[i++] = logic.getNanoBots()[j]->getPos()[1] - d[0] * 0.5 - d[1];
+      data[i++] = n->getPos()[0] + d[1] * 0.5 - d[0];
+      data[i++] = n->getPos()[1] - d[0] * 0.5 - d[1];
       data[i++] = color[0];
       data[i++] = color[1];
       data[i++] = color[2];
-      data[i++] = logic.getNanoBots()[j]->getPos()[0] - d[1] * 0.5 - d[0];
-      data[i++] = logic.getNanoBots()[j]->getPos()[1] + d[0] * 0.5 - d[1];
+      data[i++] = n->getPos()[0] - d[1] * 0.5 - d[0];
+      data[i++] = n->getPos()[1] + d[0] * 0.5 - d[1];
       data[i++] = color[0];
       data[i++] = color[1];
       data[i++] = color[2];
+      // data[i++] = n->getPos()[0];
+      // data[i++] = n->getPos()[1];
+      // data[i++] = colorTip[0];
+      // data[i++] = colorTip[1];
+      // data[i++] = colorTip[2];
+      // data[i++] = n->getPos()[0] + d[1] * 0.5 - d[0];
+      // data[i++] = n->getPos()[1] - d[0] * 0.5 - d[1];
+      // data[i++] = colorTip[0];
+      // data[i++] = colorTip[1];
+      // data[i++] = colorTip[2];
+      // data[i++] = n->getPos()[0] - d[1] * 0.5 - d[0];
+      // data[i++] = n->getPos()[1] + d[0] * 0.5 - d[1];
+      // data[i++] = colorTip[0];
+      // data[i++] = colorTip[1];
+      // data[i++] = colorTip[2];
     }
   glBindBuffer(GL_ARRAY_BUFFER, fixtureBuffer);
   glBufferData(GL_ARRAY_BUFFER, i * sizeof(float), data, GL_STATIC_DRAW);
@@ -169,12 +231,12 @@ void Display::displayBots()
 void Display::displayScraps()
 {
   Bind<RenderContext> bind(worldRenderContext);
-  float *data = new float[logic.getScraps().size() * 4 * 5 * 6];
+  float *data = new float[logic.getScraps().size() * 6 * 5];
   unsigned int i(0);
 
   for (unsigned int j(0); j < logic.getScraps().size(); j++)
     {
-      Vect<3u, double> color(1.0, 1.0, 1.0);//NanoBot::botColors[logic.getNanoBots()[j]->getType()]);
+      Vect<3u, double> color(NanoBot::botColors[logic.getScraps()[j]->getType()]);
 
       for (unsigned int q(0u); q < 6; ++q)
 	{
@@ -203,7 +265,7 @@ void Display::displayMouseSelection()
   glBindFramebuffer(GL_FRAMEBUFFER, lightRenderTexture.framebuffer);
   if (!Callback::leftPressed)
     return;
-  float data[4 * 5 * 4];
+  float data[5 * 4];
   unsigned int i(0);
 
   for (unsigned int j(0); j < 4; j++)
@@ -241,6 +303,7 @@ void Display::render()
   // lights[0].center += {-0.01, 0.01};
   //  lights[0].center[0] -= 0.01;
   renderLights();
+  renderLasers();
   displayMouseSelection();
   displayBots();
   displayScraps();

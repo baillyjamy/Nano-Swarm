@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <cmath>
 #include "logic.hpp"
 #include "light.hpp"
 
@@ -7,50 +8,37 @@ Logic Logic::instance = Logic();
 
 Logic::Logic()
 {
+  spawnDelay = 0;
+  level = 0;
   //line fight BOMBER vs BRUTE
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05, (i / 10) * 0.05 + 0.4},
-	      {-0.00 * (i % 10), 0},
+  for (unsigned int i(0); i < 20; i++)
+    createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 + 0.4},
+	      {0, 0},
+	      true,
+	      NanoBot::BRUTE);
+  for (unsigned int i(0); i < 20; i++)
+    createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05},
+	      {0, 0},
 	      true,
 	      NanoBot::WORKER);
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 + 0.4},
-	      {+0.001, 0},
-	      false,
-	      NanoBot::BRUTE);
-  //line fight BRUTE vs BRUTE
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.2},
-	      {-0.001 * (i % 10), 0},
-	      true,
-	      NanoBot::BRUTE);
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.2},
-	      {+0.001, 0},
-	      false,
-	      NanoBot::BRUTE);
-  //line fight SHOOTER vs BRUTE
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05, (i / 10) * 0.05 - 0.9},
-	      {+0.001, 0},
+  for (unsigned int i(0); i < 20; i++)
+    createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 - 0.9},
+	      {0, 0},
 	      true,
 	      NanoBot::SHOOTER);
-  for (unsigned int i(0); i < 100; i++)
-    createBot({(i % 10) * 0.05 - 0.5, (i / 10) * 0.05 - 0.9},
-	      {+0.001, 0},
-	      false,
-	      NanoBot::BRUTE);
 }
 
-void Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type)
+NanoBot *Logic::createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type)
 {
-  Light *l = new Light(Light{{0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, 0.05f});
+  Light *l = new Light(Light{{0.0f, 0.0f},
+	{!ally ? Vect<4u, float>{0.5f, 0.5f, 0.5f, 1.0f} :
+	  (Vect<4u, float>{1.0f, 1.0f, 1.0f, 1.0f})},
+	  0.05f});
   addLight(l);
-  nanoBots.push_back(new NanoBot(pos,
-				 speed,
-				 ally,
-				 type,
-				 l));
+  NanoBot *n = new NanoBot(pos, speed, ally, type, l);
+
+  nanoBots.push_back(n);
+  return n;
 }
 
 Logic& Logic::getInstance()
@@ -58,7 +46,7 @@ Logic& Logic::getInstance()
   return instance;
 }
 
-void Logic::tick()
+void Logic::updateNanoBots()
 {
   std::for_each(nanoBots.begin(), nanoBots.end(), [this](NanoBot *n){
       std::vector<NanoBot *> nearBots;
@@ -82,13 +70,17 @@ void Logic::tick()
     {
       if (std::find(toDelete.begin(), toDelete.end(), *it) != toDelete.end())
 	{
-	  addExplosion(new Light{(*it)->getPos(), {5.0, 5.0, 5.0, 1.0}, 0.1});
+	  addExplosion(new Light{(*it)->getPos(), {5.0, 5.0, 1.0, 1.0}, 0.1});
 	  scraps.push_back(new Scrap((*it)->getPos(), (*it)->getSpeed(), (*it)->getType()));
 	  it = nanoBots.erase(it);
 	}
       else
 	++it;
     }
+}
+
+void Logic::updateScraps()
+{
   std::for_each(scraps.begin(), scraps.end(), [this](Scrap *r){
       std::vector<NanoBot *> nearBots;
       std::for_each(nanoBots.begin(), nanoBots.end(), [this, r, &nearBots](NanoBot *m)
@@ -106,7 +98,34 @@ void Logic::tick()
       else
 	++it_r;
     }
+}
+
+void Logic::spawnEnemies()
+{
+  Vect<2u, double> spawnCenter(sin(level * level), cos(level * level));
+
+  spawnCenter *= 2.0;
+  for (unsigned int i(0); i < 10 + level; i++)
+    createBot(Vect<2u, float>{(i % 5) * 0.05, (i / 5) * 0.05} + spawnCenter,
+	      {0, 0},
+	      false,
+	      static_cast<NanoBot::Type>(level % NanoBot::Type::UNKNOWN))->move({0.0, 0.0});
+}
+
+void Logic::tick()
+{
+  if (spawnDelay == 0)
+    {
+      ++level;
+      spawnEnemies();
+      spawnDelay = 15000 / (level + 50);
+    }
+  else
+    --spawnDelay;
+  updateNanoBots();
+  updateScraps();
   updateExplosions();
+  updateLasers();
 }
 
 void Logic::updateExplosions()
@@ -130,6 +149,29 @@ void Logic::addExplosion(Light *l)
 {
   explosions.push_back(l);
   lights.push_back(l);
+}
+
+
+void Logic::updateLasers()
+{
+  std::vector<Laser *>::iterator it(lasers.begin());
+
+  while (it != lasers.end())
+    {
+      (*it)->power -= 0.1;
+      if ((*it)->power <= 0)
+	{
+	  delete *it;
+	  it = lasers.erase(it);
+	}
+      else
+	++it;
+    }
+}
+
+void Logic::addLaser(Laser *l)
+{
+  lasers.push_back(l);
 }
 
 void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end, Vect<4u, bool> keyPressed)
@@ -239,4 +281,9 @@ void Logic::removeLight(Light *l)
 std::vector<Light *> const &Logic::getLights() const
 {
   return lights;
+}
+
+std::vector<Laser *> const &Logic::getLasers() const
+{
+  return lasers;
 }

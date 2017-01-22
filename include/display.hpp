@@ -36,6 +36,7 @@ public:
   void displayBots();
   void displayScraps();
   void renderLights();
+  void renderLasers();
   void postProcess();
   void displayMouseSelection();
 };

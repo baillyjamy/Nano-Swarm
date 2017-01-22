@@ -28,11 +28,11 @@ bool NanoBot::update()
 
   // speed += pos * 0.005;
 
-  pos += speed;
+  pos += speed * 0.5;
   light->center = pos;
-  light->color = !ally ? Vect<4u, float>{1.0, 0.5, 0.5, 1.0}
-  : (selected ? Vect<4u, float>{1.0, 1.0, 0.5, 1.0}
-  : Vect<4u, float>{0.5, 1.0, 0.5, 1.0});
+  light->color = !ally ? Vect<4u, float>{2.0, 0.5, 0.5, 1.0}
+  : (selected ? Vect<4u, float>{1.0, 1.0, 0.75, 1.0}
+  : Vect<4u, float>{0.75, 2.0, 0.75, 1.0});
   speed *= 0.9;
   return !(cooldown -= !!cooldown);
 }
@@ -107,7 +107,7 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
 
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((*it)->isAlly() == ally && (*it)->getType() == type)
+      if ((*it)->isAlly() == ally)// && (*it)->getType() == type)
   	{
   	  Vect<2u, double> posDelta(pos - (*it)->pos);
   	  Vect<2u, double> speedDelta(speed - (*it)->speed);
@@ -125,8 +125,7 @@ void NanoBot::tick(std::vector<NanoBot *> &nearBots)
   if (dir.length() > maxAccel * maxAccel)
     dir = dir.normalized() * maxAccel;
   speed += dir;
-
-   speed -= pos * 0.000001;
+  //  speed -= pos * 0.000001;
 }
 
 void NanoBot::action(std::vector<NanoBot *> &nearBots, std::vector<Scrap *> &nearScraps, Logic &logic)
@@ -168,57 +167,61 @@ void NanoBot::workerAction(std::vector<Scrap *> &nearScraps, Logic &logic)
 	      if (firstWorker != nullptr)
 		{
 		  logic.createBot(pos,
-			    {0, 0},
-			    true,
+				  {0, 0},
+				  ally,
 			    NanoBot::WORKER);
 		  logic.destroyScrap(firstWorker);
 		  logic.destroyScrap((*it));
 		  firstWorker = nullptr;
+		  cooldown = WORKER::cooldown;
+		  return ;
 		}
-	      else
-		firstWorker = *it;
+	      firstWorker = *it;
 	      break;
 	    case BRUTE:
 	      if (firstBrute != nullptr)
 		{
 		  logic.createBot(pos,
 				  {0, 0},
-				  true,
+				  ally,
 				  NanoBot::BRUTE);
 		  logic.destroyScrap(firstBrute);
 		  logic.destroyScrap((*it));
 		  firstBrute = nullptr;
+		  cooldown = WORKER::cooldown;
+		  return ;
 		}
-	      else
-		firstBrute = *it;
+	      firstBrute = *it;
 	      break;
 	    case SHOOTER:
 	      if (firstShooter != nullptr)
 		{
 		  logic.createBot(pos,
 				  {0, 0},
-				  true,
+				  ally,
 				  NanoBot::SHOOTER);
 		  logic.destroyScrap(firstShooter);
 		  logic.destroyScrap((*it));
 		  firstShooter = nullptr;
+		  cooldown = WORKER::cooldown;
+		  return ;
 		}
-	      else
-		firstShooter = *it;
+	      firstShooter = *it;
 	      break;
 	    case BOMBER:
 	      if (firstBomber != nullptr)
 		{
 		  logic.createBot(pos,
 				  {0, 0},
-				  true,
+				  ally,
 				  NanoBot::BOMBER);
 		  logic.destroyScrap(firstBomber);
 		  logic.destroyScrap((*it));
 		  firstBomber = nullptr;
+		  cooldown = WORKER::cooldown;
+		  return ;
 		}
-	      else
-		firstBomber = *it;
+	      firstBomber = *it;
 	      break;
 	    default:
 	      break;
@@ -235,6 +238,7 @@ void NanoBot::bruteAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 	{
 	  cooldown = BRUTE::cooldown;
 	  logic.kill(*it);
+	  //	  return ;
 	}
     }
 }
@@ -245,8 +249,10 @@ void NanoBot::shooterAction(std::vector<NanoBot *> &nearBots, Logic &logic)
     {
       if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < SHOOTER::attackRange)
 	{
+	  logic.addLaser(new Laser{pos, (*it)->pos, 1.0});
 	  cooldown = SHOOTER::cooldown;
 	  logic.kill(*it);
+	  return ;
 	}
     }
 }
@@ -255,7 +261,7 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 {
   for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
     {
-      if ((pos - (*it)->pos).length() < BOMBER::attackRange)
+      if ((*it)->isAlly() != ally && (pos - (*it)->pos).length() < BOMBER::attackRange)
 	{
 	  // kill every nanobot in range
 	  for (std::vector<NanoBot *>::iterator it(nearBots.begin()); it != nearBots.end(); ++it)
@@ -266,7 +272,7 @@ void NanoBot::bomberAction(std::vector<NanoBot *> &nearBots, Logic &logic)
 
 	  // kill himself
 	  logic.kill(this);
-	  return;
+	  return ;
 	}
     }
 }

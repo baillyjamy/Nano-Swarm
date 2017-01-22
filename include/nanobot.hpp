@@ -21,10 +21,10 @@ public:
     };
 
   static constexpr const Vect<3u, double> botColors[UNKNOWN] = {
-    {0.5, 0.5, 0.5},
-    {1.0, 0.15, 0.15},
-    {0.15, 0.15, 1.0},
-    {0, 0.7, 0.3},
+    {0.0, 0.5, 0.5},
+    {1.0, 0.25, 0.0},
+    {0.25, 0.0, 1.0},
+    {1.0, 1.0, 1.0},
   };
 
 private:
@@ -62,14 +62,14 @@ private:
 
 namespace WORKER
 {
-  constexpr double collectRange = 0.0002;
-  constexpr double cooldown = 10;
+  constexpr double collectRange = 0.01;
+  constexpr double cooldown = 180;
 }
 
 namespace BRUTE
 {
-  constexpr double attackRange = 0.0002;
-  constexpr double cooldown = 100;
+  constexpr double attackRange = 0.01;
+  constexpr double cooldown = 60;
 }
 
 namespace SHOOTER
@@ -80,8 +80,8 @@ namespace SHOOTER
 
 namespace BOMBER
 {
-  constexpr double attackRange = 0.0002;
-  constexpr double explosionRange = 0.003;
+  constexpr double attackRange = 0.01;
+  constexpr double explosionRange = 0.01;
 }
 
 #endif

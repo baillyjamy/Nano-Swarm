@@ -4,6 +4,7 @@
 # include <vector>
 # include "nanobot.hpp"
 # include "scrap.hpp"
+# include "laser.hpp"
 
 class Logic
 {
@@ -14,24 +15,33 @@ private:
   std::vector<Scrap *> scraps;
   std::vector<Scrap *> scrapsToDelete;
   std::vector<Light *> explosions;
+  std::vector<Laser *> lasers;
   Vect<2u, double> selectStart;
   std::vector<Light *> lights;
+  unsigned int spawnDelay;
+  unsigned int level;
 public:
   static Logic& getInstance();
 
   void tick();
   std::vector<NanoBot *> const &getNanoBots() const;
   std::vector<Scrap *> const &getScraps() const;
+  std::vector<Laser *> const &getLasers() const;
   void kill(NanoBot *);
   void selectNearBots(Vect<2u, double> coord, NanoBot::Type type = NanoBot::UNKNOWN);
   void selectRect(Vect<2u, double> pos, Vect<2u, double> size, Vect<4u, bool> keyPressed);
   void refreshSelection(Vect<4u, bool> keyPressed);
   void destroyScrap(Scrap *);
   void moveSelection(Vect<2u, double> coord);
-  void createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type);
-  void addExplosion(Light *);
-  void updateExplosions();
+  NanoBot *createBot(Vect<2u, double> pos, Vect<2u, double> speed, bool ally, NanoBot::Type type);
   void addLight(Light *);
+  void addExplosion(Light *);
+  void addLaser(Laser *);
+  void updateNanoBots();
+  void updateScraps();
+  void updateExplosions();
+  void updateLasers();
+  void spawnEnemies();
   void removeLight(Light *);
   std::vector<Light *> const &getLights() const;
 

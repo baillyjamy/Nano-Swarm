@@ -2,11 +2,11 @@ CC =	g++
 
 RM =	rm -f
 
-CFLAGS +=	-W -Wextra -Wall
+CFLAGS +=	-W -Wall -Wextra
 CFLAGS +=	-I./
 
-CPPFLAGS +=	-W -Wextra -Wall
-CPPFLAGS +=	-I./include -I. -std=c++11 -O3
+CPPFLAGS +=	-W -Wall -Wextra
+CPPFLAGS +=	-I. -I./include -std=c++11 -g3
 
 LDFLAGS = `pkg-config --static --libs glfw3`
 
