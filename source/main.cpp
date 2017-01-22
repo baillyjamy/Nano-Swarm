@@ -37,23 +37,29 @@ int main(void)
 
       Callback::setCallbacks(window);
 
+      sf::SoundBuffer explosionSound;
+      if (!buffer.loadFromFile("sound.wav"))
+        {
+          std::cerr << "Sound buffer not charged: explosion" << std::endl;
+          return -1;
+        }
+
       sf::Music music;
       if (!music.openFromFile("background_music.ogg"))
-	{
-	  std::cerr << "Music not charged" << std::endl;
-	  return (-1);
-	}
+        {
+          std::cerr << "Music not charged" << std::endl;
+          return (-1);
+        }
       music.setLoop(true);
       music.setVolume(40);
       music.play();
-
       while (!glfwWindowShouldClose(window))
-	{
-	  if (mainLoop.tick())
-	    break;
-	  glfwSwapBuffers(window);
-	  glfwPollEvents();
-	}
+        {
+          if (mainLoop.tick())
+            break;
+          glfwSwapBuffers(window);
+          glfwPollEvents();
+        }
     }
   catch (std::string const& e)
     {

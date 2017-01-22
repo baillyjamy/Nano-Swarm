@@ -166,15 +166,19 @@ void Logic::updateExplosions()
   std::vector<Light *>::iterator it(explosions.begin());
   while (it != explosions.end())
     {
+      if ((*it)->color[3] == 1f)
+        {
+          //play sound
+        }
       (*it)->color[3] -= 0.2;
       (*it)->radius += 0.05;
       if ((*it)->color[3] <= 0)
-	{
-	  removeLight(*it);
-	  it = explosions.erase(it);
-	}
+        {
+          removeLight(*it);
+          it = explosions.erase(it);
+        }
       else
-	++it;
+        ++it;
     }
 }
 
