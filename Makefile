@@ -8,7 +8,7 @@ CFLAGS +=	-I./
 CPPFLAGS +=	-W -Wall -Wextra
 CPPFLAGS +=	-I. -I./include -std=c++11 -g3
 
-LDFLAGS = `pkg-config --static --libs glfw3`
+LDFLAGS = `pkg-config --static --libs glfw3` -lsfml-audio -lsfml-system
 
 NAME = nano-swarm
 
