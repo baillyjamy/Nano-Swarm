@@ -136,17 +136,14 @@ void Display::renderLasers()
 		[&data, &i](Laser *l)
 		{
 		  Vect<2u, double> d((l->end - l->start).normalized() * 0.03 * l->power);
-		  std::cout << d[0] << ":" << d[1] << std::endl;
 		  for (unsigned int a(0); a <= 2u; a += 2)
 		    {
 		      Vect<2u, double> off(Vect<2u, double>(d[1], -d[0]) * (static_cast<double>(a) - 1.0));
 
-		      std::cout << off[0] << "," << off[1] << std::endl;
 		      for (unsigned int j(0); j < 6u; j++)
 			{
 			  Vect<2u, double> pos((j & 1 ? l->start : l->end) + (off * (j <= 1 || j == 3)));
 
-			  //			  std::cout << pos[0] << "," << pos[1] << std::endl;
 			  data[i++] = pos[0];
 			  data[i++] = pos[1];
 			  data[i++] = !(j <= 1 || j == 3) * 1.0;

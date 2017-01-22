@@ -105,11 +105,13 @@ void Logic::spawnEnemies()
   Vect<2u, double> spawnCenter(sin(level * level), cos(level * level));
 
   spawnCenter *= 2.0;
-  for (unsigned int i(0); i < 10 + level; i++)
-    createBot(Vect<2u, float>{(i % 5) * 0.05, (i / 5) * 0.05} + spawnCenter,
+  for (unsigned int i(0); i < (10 + level) / 3; i++)
+    createBot(Vect<2u, double>{(i % 5) * 0.05, (i / 5) * 0.05} + spawnCenter,
 	      {0, 0},
 	      false,
-	      static_cast<NanoBot::Type>(level % NanoBot::Type::UNKNOWN))->move({0.0, 0.0});
+	      static_cast<NanoBot::Type>(level % NanoBot::Type::UNKNOWN))
+      ->move(Vect<2u, double>{sin(level) * 0.9, cos(level * level * level) * 0.9} 
+	     + Vect<2u, double>{(i % 5) * 0.05, (i / 5) * 0.05});
 }
 
 void Logic::tick()
@@ -186,12 +188,9 @@ void Logic::selectRect(Vect<2u, double> start, Vect<2u, double> end, Vect<4u, bo
 	    {
 	      bot->setSelection(true);
 	      selectedBots.push_back(bot);
-	      // std::cout << "selected" << std::endl;
 	    }
 	  else
-	    {
-	      bot->setSelection(false);
-	    }
+	    bot->setSelection(false);
 	}
     });
 }
@@ -207,9 +206,7 @@ void Logic::refreshSelection(Vect<4u, bool> keyPressed)
 	  it = selectedBots.erase(it);
 	}
       else
-	{
-	  it++;
-	}
+	it++;
     }
 }
 
