@@ -9,7 +9,7 @@
 #include "bind.hpp"
 #include "math.hpp"
 #include "logic.hpp"
-#include "input.hpp"
+#include "callback.hpp"
 #include "nanobot.hpp"
 
 static inline RenderContext contextFromFiles(std::string name)

@@ -3,7 +3,7 @@
 #include <fenv.h>
 #include "my_opengl.hpp"
 #include "main_loop.hpp"
-#include "input.hpp"
+#include "callback.hpp"
 
 static inline GLFWwindow *init(Vect<2u, unsigned int> const dim)
 {

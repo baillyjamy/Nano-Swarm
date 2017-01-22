@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP_
-# define INPUT_HPP_
+#ifndef CALLBACK_HPP_
+# define CALLBACK_HPP_
 
 # include "my_opengl.hpp"
 # include "vect.hpp"
@@ -26,4 +26,4 @@ namespace Callback
   extern Vect<4u, bool> keyPressed;
 };
 
-#endif /* !INPUT_HPP_ */
+#endif /* !CALLBACK_HPP_ */

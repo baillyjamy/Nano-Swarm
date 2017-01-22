@@ -1,5 +1,5 @@
 #include <iostream>
-#include "callback.hpp"
+#include "input.hpp"
 
 Vect<2u, double> Callback::pos(0, 0);
 Vect<2u, double> Callback::dragOrigin(0, 0);
