@@ -14,6 +14,11 @@ Logic::Logic()
   nbAlly = 0;
   // create bots !!
   for (unsigned int i(0); i < 20; i++)
+    createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 - 0.4},
+	      {0, 0},
+	      true,
+	      NanoBot::BOMBER);
+  for (unsigned int i(0); i < 20; i++)
     createBot({(i % 10) * 0.05 - 0.12, (i / 10) * 0.05 + 0.4},
 	      {0, 0},
 	      true,

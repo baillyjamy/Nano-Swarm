@@ -5,7 +5,7 @@
 # include "vect.hpp"
 
 class Logic;
-class Light;
+struct Light;
 class Scrap;
 
 class NanoBot

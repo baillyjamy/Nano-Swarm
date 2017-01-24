@@ -11,7 +11,7 @@ public:
   constexpr Supplier(Op op)
     : op(op)
   {}
-  constexpr R get() {
+  constexpr R get() const {
     return op();
   }
 };
@@ -26,7 +26,7 @@ public:
   constexpr Function(Op op)
     : op(op)
   {}
-  constexpr Y apply(X x) {
+  constexpr Y apply(X x) const {
     return op(x);
   }
 };

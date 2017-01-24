@@ -48,7 +48,7 @@ public:
   {}
 
   template<class... U, typename std::enable_if<sizeof...(U) == dim>::type * = nullptr>
-  constexpr Vect(U... ts) : data{ts...}
+  constexpr Vect(U... ts) : data{static_cast<T>(ts)...}
   {}
 
   constexpr Vect()
@@ -155,7 +155,7 @@ public:
   }
 
   template<class Op>
-  constexpr Vect<dim, T> map(Op op)
+  constexpr Vect<dim, T> map(Op op) const
   {
     return applyOp([op, this](unsigned int i){
 	return (op(data[i]));
@@ -163,7 +163,7 @@ public:
   }
 
   template<class Op, class U>
-  constexpr Vect<dim, T> applyOpPerComponent(Op op, const Vect<dim, U>& other)
+  constexpr Vect<dim, T> applyOpPerComponent(Op op, const Vect<dim, U>& other) const
   {
     return applyOp([this, other, op](unsigned int i){
 	return op((*this)[i], other[i]);
