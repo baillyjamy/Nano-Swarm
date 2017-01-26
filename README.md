@@ -14,7 +14,7 @@ You are a swarm of nanobots. Sadly you are not the only one. Enemy swarms will c
 The game is controlled with mouse and keyboard. Use the left click to drag select and the right click to move. Press 1, 2, 3, 4 keys to narrow down the selection to workers, brutes, shooters and bombers respectivelly.
 You can also select all our bots with spacebar. Have fun!
 
-## Developpers
+## Developers
 * [Jakob Kellendonk] (https://github.com/Gaspard--)
 
 * [David Zeng] (https://github.com/Arcsz)
