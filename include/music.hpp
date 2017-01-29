@@ -7,6 +7,7 @@ class Music
 {
 public:
   static Music& getInstance();
+  ~Music();
 
   void playMainMusic();
   sf::Sound *playExplosionSound();

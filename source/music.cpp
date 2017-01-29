@@ -18,6 +18,10 @@ Music::Music() : mainMusic(), explosionSound()
     }
 }
 
+Music::~Music() {
+  mainMusic.stop();
+}
+
 Music& Music::getInstance()
 {
   return instance;
