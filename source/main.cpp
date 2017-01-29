@@ -47,7 +47,7 @@ int main(void)
           glfwPollEvents();
         }
     }
-  catch (std::string const& e)
+  catch (char const *e)
     {
       std::cerr << e << std::endl;
       glfwTerminate();
