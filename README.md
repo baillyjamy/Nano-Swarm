@@ -7,7 +7,7 @@ You are a swarm of nanobots. Sadly you are not the only one. Enemy swarms will c
 
 ## Usage
 1. Clone the project
-2. Install [GLFW] (http://www.glfw.org/) and [SFML] (https://www.sfml-dev.org/) library
+2. Install [GLFW](http://www.glfw.org/) and [SFML](https://www.sfml-dev.org/) library
 3. Open the project directory
 4. `make` the project
 5. Launch the game: `./nano-swarm`
@@ -17,11 +17,11 @@ The game is controlled with mouse and keyboard. Use the left click to drag selec
 You can also select all our bots with spacebar. Have fun!
 
 ## Developers
-* [Jakob Kellendonk] (https://github.com/Gaspard--)
+* [Jakob Kellendonk](https://github.com/Gaspard--)
 
-* [David Zeng] (https://github.com/Arcsz)
+* [David Zeng](https://github.com/Arcsz)
 
-* [Jamy Bailly] (https://github.com/baillyjamy)
+* [Jamy Bailly](https://github.com/baillyjamy)
 
 ## Todo
 ```
