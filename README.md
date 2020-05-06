@@ -3,6 +3,8 @@
 
 You are a swarm of nanobots. Sadly you are not the only one. Enemy swarms will come in waves and try to populate the screen. Destroy them with your brutes at close range, your long ranged nanobots, or even your suicidal nanobots! You also dispose of workers to rebuild your swarm from the leftover wrecks of war, try to survive as long as possible! 
 
+![Nano Swarm Demo](gif/nano-swarm.gif)
+
 ## Usage
 1. Clone the project
 2. Install [GLFW] (http://www.glfw.org/) and [SFML] (https://www.sfml-dev.org/) library
